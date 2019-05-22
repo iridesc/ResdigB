@@ -1,0 +1,90 @@
+---------------------2019-01-11 15:56:38---------------------
+Traceback (most recent call last):
+  File "manager-x.py", line 351, in <module>
+    reguler.act(cache)
+  File "manager-x.py", line 321, in act
+    F()
+  File "<string>", line 2, in updatebroadcast
+  File "C:\Program Files\Python37\lib\multiprocessing\managers.py", line 811, in _callmethod
+    raise convert_to_error(kind, result)
+IndexError: list index out of range
+---------------------2019-01-11 15:58:44---------------------
+Traceback (most recent call last):
+  File "manager-x.py", line 352, in <module>
+    reguler.act(cache)
+AttributeError: 'str' object has no attribute 'act'
+---------------------2019-01-11 15:59:26---------------------
+Traceback (most recent call last):
+  File "manager-x.py", line 353, in <module>
+    reguler.act(cache)
+AttributeError: 'str' object has no attribute 'act'
+---------------------2019-01-11 16:01:38---------------------
+Traceback (most recent call last):
+  File "manager-x.py", line 351, in <module>
+    reguler.act(cache)
+  File "manager-x.py", line 321, in act
+    F()
+  File "<string>", line 2, in updatebroadcast
+  File "C:\Program Files\Python37\lib\multiprocessing\managers.py", line 811, in _callmethod
+    raise convert_to_error(kind, result)
+IndexError: list index out of range
+---------------------2019-01-11 16:01:45---------------------
+Traceback (most recent call last):
+  File "manager-x.py", line 351, in <module>
+    reguler.act(cache)
+  File "manager-x.py", line 321, in act
+    F()
+  File "<string>", line 2, in updatebroadcast
+  File "C:\Program Files\Python37\lib\multiprocessing\managers.py", line 811, in _callmethod
+    raise convert_to_error(kind, result)
+IndexError: list index out of range
+---------------------2019-01-11 16:02:07---------------------
+Traceback (most recent call last):
+  File "manager-x.py", line 351, in <module>
+    reguler.act(cache)
+  File "manager-x.py", line 321, in act
+    F()
+  File "<string>", line 2, in updateappversion
+  File "C:\Program Files\Python37\lib\multiprocessing\managers.py", line 811, in _callmethod
+    raise convert_to_error(kind, result)
+IndexError: list index out of range
+---------------------2019-01-11 16:02:52---------------------
+Traceback (most recent call last):
+  File "manager-x.py", line 351, in <module>
+    reguler.act(cache)
+  File "manager-x.py", line 321, in act
+    F()
+  File "<string>", line 2, in updateappversion
+  File "C:\Program Files\Python37\lib\multiprocessing\managers.py", line 811, in _callmethod
+    raise convert_to_error(kind, result)
+IndexError: list index out of range
+---------------------2019-01-11 17:29:57---------------------
+Traceback (most recent call last):
+  File "manager-x.py", line 350, in <module>
+    reguler.act(cache)
+  File "manager-x.py", line 321, in act
+    F()
+  File "<string>", line 2, in saveres
+  File "C:\Program Files\Python37\lib\multiprocessing\managers.py", line 811, in _callmethod
+    raise convert_to_error(kind, result)
+django.db.utils.InternalError: (1054, "Unknown column 'resdig_resourcetable.filename' in 'field list'")
+---------------------2019-01-11 17:54:25---------------------
+Traceback (most recent call last):
+  File "manager-x.py", line 350, in <module>
+    reguler.act(cache)
+  File "manager-x.py", line 321, in act
+    F()
+  File "<string>", line 2, in saveres
+  File "C:\Program Files\Python37\lib\multiprocessing\managers.py", line 811, in _callmethod
+    raise convert_to_error(kind, result)
+django.db.utils.InternalError: (1054, "Unknown column 'resdig_resourcetable.filename' in 'field list'")
+---------------------2019-01-11 18:03:12---------------------
+Traceback (most recent call last):
+  File "manager-x.py", line 350, in <module>
+    reguler.act(cache)
+  File "manager-x.py", line 321, in act
+    F()
+  File "<string>", line 2, in saveres
+  File "C:\Program Files\Python37\lib\multiprocessing\managers.py", line 811, in _callmethod
+    raise convert_to_error(kind, result)
+django.db.utils.InternalError: (1054, "Unknown column 'resdig_resourcetable.filename' in 'field list'")

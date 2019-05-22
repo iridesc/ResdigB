@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,shrink-to-fit=no">
+    <title>Resdig</title>
+	{% load staticfiles %}
+    <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/iridesc/ocolabstatic/master/resdig/img/favicon.ico" />
+    <link href="{% static '/resdig/css/bootstrap-material-design.css' %}" rel="stylesheet">
+    <link href="{% static '/resdig/css/style.css' %}" rel="stylesheet">
+    <link href ="{% static '/resdig/css/animate.css' %}" rel="stylesheet">
+
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/aes-js/3.1.2/index.min.js"></script>
+    <script src="https://cdn.bootcss.com/spin.js/2.3.2/spin.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min.js"></script>
+    <script src="https://cdn.bootcss.com/clipboard.js/2.0.4/clipboard.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-1267290759397438",
+            enable_page_level_ads: true
+        });
+    </script>
+<!-- 
+    <script src="{% static '/resdig/js/mainjs.js' %}"></script>
+    <script src="{% static '/resdig/js/marquee.js' %}"></script> -->
+      <script src="{% static '/resdig/js/core.js' %}"></script> 
+
+</head>
+<body ondragstart="return false;" oncontextmenu="return false;">
+
+<!-- 
+    
+
+
+ -->
+<div id="loading_field" class="align-items-center row">
+    <div class="col-2 mx-auto">
+        <img id="loading" class="animated heartBeat" src="https://raw.githubusercontent.com/iridesc/ocolabstatic/master/resdig/img/mainpagelogo.png" ></div>
+</div>
+    <div id="header" class="fixed-top card">
+        <div id ="header_tabs" class="row">
+            <div class="col-lg-3  d-none d-lg-flex">
+                <div class="card m-3 donation_field" >
+                    <img class="card-img-top donation_img m-3 mx-auto" src="https://raw.githubusercontent.com/iridesc/ocolabstatic/master/resdig/img/hardware.png" alt="Card image">
+                    <div class="card-body donation_text" >
+                        <h4 class="card-title">捐个手机吧</h4>
+                        <p class="card-text">
+                            如果您愿意邮寄您闲置手机,闲置电脑,甚至是cpu、主板、内存、电源等，给我们以组建新的引擎，让他们在Resdig发挥余热,我们将非常感谢！ 同时您的捐赠信 息将同时出现在组建的引擎介绍面板与本页下方的感谢墙!并且如果您的设备某个引擎贡献最大您将获得该引擎的命名权!
+                        </p>
+                        <a href="#" class="btn btn-primary">联系我们:resdig@qq.com</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-12">
+                <div class="card m-3 donation_field d-none d-lg-flex">
+                    <ul class="nav m-3 nav-tabs" role="tablist">
+                        <li class="nav-ite ">
+                            <a class="nav-link active" data-toggle="tab" href="#donation_history">捐赠历史</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#help">帮助</a>
+                        </li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="m-3 tab-content">
+                        <div id="donation_history" class="container tab-pane active"><br>
+                            <h3 class="card-title" >由衷的感谢</h3>
+                            <table id="donation_table" class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>时间</th>
+                                    <th>捐赠者</th>
+                                    <th>类型</th>
+                                    <th>详情</th>
+                                    <th>留言</th>
+                                </tr>
+                                </thead>
+                                    <tbody>
+                                    <!-- <tr>
+                                        <td>2018/10/10 上午1:46:59</td>
+                                        <td>宿管老大</td>
+                                        <td>Device</td>
+                                        <td>神舟台式机一套</td>
+                                        <td>这位是个低调的捐献者!</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2018/10/10 上午1:46:59</td>
+                                        <td>宿管老大</td>
+                                        <td>Device</td>
+                                        <td>神舟台式机一套</td>
+                                        <td>这位是个低调的捐献者!</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2018/10/10 上午1:46:59</td>
+                                        <td>宿管老大</td>
+                                        <td>Device</td>
+                                        <td>神舟台式机一套</td>
+                                        <td>这位是个低调的捐献者!</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2018/10/10 上午1:46:59</td>
+                                        <td>宿管老大</td>
+                                        <td>Device</td>
+                                        <td>神舟台式机一套</td>
+                                        <td>这位是个低调的捐献者!</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2018/10/10 上午1:46:59</td>
+                                        <td>宿管老大</td>
+                                        <td>Device</td>
+                                        <td>神舟台式机一套</td>
+                                        <td>这位是个低调的捐献者!</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2018/10/10 上午1:46:59</td>
+                                        <td>宿管老大</td>
+                                        <td>Device</td>
+                                        <td>神舟台式机一套</td>
+                                        <td>这位是个低调的捐献者!</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2018/10/10 上午1:46:59</td>
+                                        <td>宿管老大</td>
+                                        <td>Device</td>
+                                        <td>神舟台式机一套</td>
+                                        <td>这位是个低调的捐献者!</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2018/10/10 上午1:46:59</td>
+                                        <td>宿管老大</td>
+                                        <td>Device</td>
+                                        <td>神舟台式机一套</td>
+                                        <td>这位是个低调的捐献者!</td>
+                                    </tr> -->
+                                    </tbody>
+                            </table>
+                        </div>
+                        <div id="help" class="container tab-pane fade">
+                            <div class="card">
+                                <div class="card-header">
+                                    <a class="card-link" data-toggle="collapse" href="#collapseOne">
+                                        如何获得我想要的资源?
+                                    </a>
+                                </div>
+                                <div id="collapseOne" class="collapse show" data-parent="#help">
+                                    <div class="card-body">
+                                        资源搜索：在主控室输入你想搜索的资源名称，点击dig按钮发动挖掘。 你会发现关键字会出现在'我的搜索'列表,同时你将收到三种可能的提示
+                                        1.提示已挖到xxx条资源，此时查看资源储存箱界面，这些资源都陈列这这里！
+                                        2.提示已将关键字加入引擎的任务列表，此时你可以在任务列表看到你的关键字，你可以选择等待直到完成或者过会再来查看'我的搜索'列表(引擎会自动完成挖掘)，同时你也可继续搜索其他资源。
+                                        3.提示翻遍n个网页也没有挖到资源，那不好意思，有两种可能
+                                        （1）可能是您搜索的是正在上映的电影，电影在上映时一般是不可能有资源的！即使有那基本上是枪版资源，我们应强烈抵制这种垃圾资源！
+                                        （2）可能是您搜索的是一些违反国家法律法规的东西！我们坚决反对这样的行为！我们将在后面的开发中逐渐引入关键字检测机制！
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseTwo">
+                                        挖到的资源在哪？如何使用这些链接？
+                                    </a>
+                                </div>
+                                <div id="collapseTwo" class="collapse" data-parent="#help">
+                                    <div class="card-body">
+                                        获取到资源后将把资源储存到资源储存箱界面，在此界面你就可以看到你所搜索的关键字的资源链接，分为 迅雷下载链接、种子下载链接、ed2k下载链接、百度网盘链接(附有原网址，以便得到资源共享密钥)。
+                                        1、对于 迅雷下载链接、种子链接、ed2k链接，点击链接调出迅雷(或者复制去迅雷新建任务,迅雷开启时批量复制有惊喜偶!)，使用迅雷等下载器进行下载。
+                                        2、对于 百度云链接，你可以转存到自己网盘(如有密钥访问原网址查找密码)，然后在百度云在线观看或者下载(ed2k链接也可使用百度网盘离线下载到自己空间在线观看，以安卓端百度云APP为例，先复制链接，打开百度云点击更多--离线下载--新建链接任务)。
+                                        3、桌面端也可使用爱奇艺万能播放器进行播放。(使用方式很多，欢迎在控制室留言板分享)
+                                        4、如果遇到问题，请直接在本页面上方提交反馈。
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseThree">
+                                        我对搜索结果不满意怎么办？
+                                    </a>
+                                </div>
+                                <div id="collapseThree" class="collapse" data-parent="#help">
+                                    <div class="card-body">
+                                        如发现多数链接失效，或者搜索时间过早，你可以点击资源储存箱页面最下面，扔给挖掘机，重新挖掘。 然后查看任务列表,关键字将会出现在那儿!
+                                        如果提示有人在xx月xx日xx时搜索过!这是正常的,一个关键字一天之内只能发动挖掘机一次,因为一天之内网络上的资源是不会有太大变化的,即使再发动一次挖掘也不会获得更多的资源,所以为了提高效率优化体验,我们将一个关键字的挖掘间隔限定在一天!您可以改日再试!
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card m-3 donation_field d-lg-none">
+                    <ul class="nav m-3 nav-tabs" role="tablist">
+                        <li class="nav-ite ">
+                        <a class="nav-link active" data-toggle="tab" href="#donation_small">捐赠</a>
+                        </li>
+                        <li class="nav-ite ">
+                            <a class="nav-link " data-toggle="tab" href="#donation_history_small">捐赠历史</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#help_small">帮助</a>
+                        </li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="m-3 tab-content">
+                        <div id="donation_small" class="container tab-pane active">
+                            <div class="tab-content ">
+                                <div class="tab-pane active text-center container" id="Alipay_small">
+                                    <img class="donation_img rounded " id="donation_3" src="https://raw.githubusercontent.com/iridesc/ocolabstatic/master/resdig/img/aipay.jpeg" alt="Card image">
+                                </div>
+                                <div class="tab-pane text-center container" id="Wechatpay_small">
+                                    <img class="donation_img rounded " id="donation_4" src="https://raw.githubusercontent.com/iridesc/ocolabstatic/master/resdig/img/wechatpay.jpeg" alt="Card image">
+                                </div>
+                                <div class="tab-pane text-center container" id="Device_small">
+                                <img class="donation_img rounded "  id="donation_5" src="https://raw.githubusercontent.com/iridesc/ocolabstatic/master/resdig/img/hardware.png" alt="Card image"style="width: auto;">
+                            </div>
+
+                            </div>
+
+                            <ul class="nav nav-tabs justify-content-center" style="width: 100%;">
+                                <li class="nav-item">
+                                    <a class="nav-link active" data-toggle="tab" href="#Alipay_small">支付宝</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#Wechatpay_small">微信</a>
+                                </li>
+                                <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#Device_small">设备</a>
+                            </li>
+                            </ul>
+                            <div class="card-body donation_text" id="describe_small">
+                                <h4 class="card-title">捐个啥吧或者捐点钱钱</h4>
+                                <p class="card-text">如果您愿意邮寄您闲置手机,闲置电脑,甚至是cpu、主板、内存、电源等，给我们以组建新的引擎，让他们在Resdig发挥余热,我们将非常感谢！ 同时您的捐赠信息将同时出现在组建的引擎介绍面板与本页下方的感谢墙！并且如果您的设备某个引擎贡献最大您将获得该引擎的命名权！ 或者扫描下方二维码进行最直接的资金支持！这对我们意义非凡！ 您的资金将用于服务器、域名、带宽等的续费，也将用于购买硬件以加强引擎！ 最后将为开发者午餐加鸡腿！同样您的捐助信息将出现在本页下方的感谢墙！！</p><a href="#" class="btn btn-primary">联系我们:resdig@qq.com</a>
+                            </div>
+                        </div>
+                        <div id="donation_history_small" class="container tab-pane "><br>
+                            <h3 class="card-title" >由衷的感谢</h3>
+                            <div id="table_field" class="table-responsive-md">
+                            <table id="donation_table_small" class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>时间</th>
+                                    <th>捐赠者</th>
+                                    <th>类型</th>
+                                    <th>详情</th>
+                                    <th>留言</th>
+                                </tr>
+                                </thead>
+                                <div>
+                                    <tbody>
+                                    <tr>
+                                        <td>2018/10/10 上午1:46:59</td>
+                                        <td>宿管老大</td>
+                                        <td>Device</td>
+                                        <td>神舟台式机一套</td>
+                                        <td>这位是个低调的捐献者!</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2018/10/10 上午1:46:59</td>
+                                        <td>宿管老大</td>
+                                        <td>Device</td>
+                                        <td>神舟台式机一套</td>
+                                        <td>这位是个低调的捐献者!</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2018/10/10 上午1:46:59</td>
+                                        <td>宿管老大</td>
+                                        <td>Device</td>
+                                        <td>神舟台式机一套</td>
+                                        <td>这位是个低调的捐献者!</td>
+                                    </tr>                            <tr>
+                                        <td>2018/10/10 上午1:46:59</td>
+                                        <td>宿管老大</td>
+                                        <td>Device</td>
+                                        <td>神舟台式机一套</td>
+                                        <td>这位是个低调的捐献者!</td>
+                                    </tr>                            <tr>
+                                        <td>2018/10/10 上午1:46:59</td>
+                                        <td>宿管老大</td>
+                                        <td>Device</td>
+                                        <td>神舟台式机一套</td>
+                                        <td>这位是个低调的捐献者!</td>
+                                    </tr>                            <tr>
+                                        <td>2018/10/10 上午1:46:59</td>
+                                        <td>宿管老大</td>
+                                        <td>Device</td>
+                                        <td>神舟台式机一套</td>
+                                        <td>这位是个低调的捐献者!</td>
+                                    </tr>                            <tr>
+                                        <td>2018/10/10 上午1:46:59</td>
+                                        <td>宿管老大</td>
+                                        <td>Device</td>
+                                        <td>神舟台式机一套</td>
+                                        <td>这位是个低调的捐献者!</td>
+                                    </tr>                            <tr>
+                                        <td>2018/10/10 上午1:46:59</td>
+                                        <td>宿管老大</td>
+                                        <td>Device</td>
+                                        <td>神舟台式机一套</td>
+                                        <td>这位是个低调的捐献者!</td>
+                                    </tr>                            <tr>
+                                        <td>2018/10/10 上午1:46:59</td>
+                                        <td>宿管老大</td>
+                                        <td>Device</td>
+                                        <td>神舟台式机一套</td>
+                                        <td>这位是个低调的捐献者!</td>
+                                    </tr><tr>
+                                        <td>2018/10/10 上午1:46:59</td>
+                                        <td>宿管老大</td>
+                                        <td>Device</td>
+                                        <td>神舟台式机一套</td>
+                                        <td>这位是个低调的捐献者!</td>
+                                    </tr>
+                                    </tbody>
+                                </div>
+                            </table>
+                            </div>
+                        </div>
+                        <div id="help_small" class="container tab-pane fade">
+                            <div class="card">
+                                <div class="card-header">
+                                    <a class="card-link" data-toggle="collapse" href="#collapse1">
+                                        如何获得我想要的资源?
+                                    </a>
+                                </div>
+                                <div id="collapse1" class="collapse show" data-parent="#help_small">
+                                    <div class="card-body">
+                                        资源搜索：在主控室输入你想搜索的资源名称，点击dig按钮发动挖掘。 你会发现关键字会出现在'我的搜索'列表,同时你将收到三种可能的提示
+                                        1.提示已挖到xxx条资源，此时查看资源储存箱界面，这些资源都陈列这这里！
+                                        2.提示已将关键字加入引擎的任务列表，此时你可以在任务列表看到你的关键字，你可以选择等待直到完成或者过会再来查看'我的搜索'列表(引擎会自动完成挖掘)，同时你也可继续搜索其他资源。
+                                        3.提示翻遍n个网页也没有挖到资源，那不好意思，有两种可能
+                                        （1）可能是您搜索的是正在上映的电影，电影在上映时一般是不可能有资源的！即使有那基本上是枪版资源，我们应强烈抵制这种垃圾资源！
+                                        （2）可能是您搜索的是一些违反国家法律法规的东西！我们坚决反对这样的行为！我们将在后面的开发中逐渐引入关键字检测机制！
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <a class="collapsed card-link" data-toggle="collapse" href="#collapse2">
+                                        挖到的资源在哪？如何使用这些链接？
+                                    </a>
+                                </div>
+                                <div id="collapse2" class="collapse" data-parent="#help_small">
+                                    <div class="card-body">
+                                        获取到资源后将把资源储存到资源储存箱界面，在此界面你就可以看到你所搜索的关键字的资源链接，分为 迅雷下载链接、种子下载链接、ed2k下载链接、百度网盘链接(附有原网址，以便得到资源共享密钥)。
+                                        1、对于 迅雷下载链接、种子链接、ed2k链接，点击链接调出迅雷(或者复制去迅雷新建任务,迅雷开启时批量复制有惊喜偶!)，使用迅雷等下载器进行下载。
+                                        2、对于 百度云链接，你可以转存到自己网盘(如有密钥访问原网址查找密码)，然后在百度云在线观看或者下载(ed2k链接也可使用百度网盘离线下载到自己空间在线观看，以安卓端百度云APP为例，先复制链接，打开百度云点击更多--离线下载--新建链接任务)。
+                                        3、桌面端也可使用爱奇艺万能播放器进行播放。(使用方式很多，欢迎在控制室留言板分享)
+                                        4、如果遇到问题，请直接在本页面上方提交反馈。
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <a class="collapsed card-link" data-toggle="collapse" href="#collapse3">
+                                        我对搜索结果不满意怎么办？
+                                    </a>
+                                </div>
+                                <div id="collapse3" class="collapse" data-parent="#help_small">
+                                    <div class="card-body">
+                                        如发现多数链接失效，或者搜索时间过早，你可以点击资源储存箱页面最下面，扔给挖掘机，重新挖掘。 然后查看任务列表,关键字将会出现在那儿!
+                                        如果提示有人在xx月xx日xx时搜索过!这是正常的,一个关键字一天之内只能发动挖掘机一次,因为一天之内网络上的资源是不会有太大变化的,即使再发动一次挖掘也不会获得更多的资源,所以为了提高效率优化体验,我们将一个关键字的挖掘间隔限定在一天!您可以改日再试!
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3  d-none d-lg-flex">
+                <div class="card  m-3  donation_field">
+                    <div class="card-img-top m-3 " style="width: auto;">
+                        <!-- Tab panes -->
+                        <div class="tab-content ">
+                            <div class="tab-pane active text-center container" id="Alipay">
+                                <img class="donation_img rounded " id="donation_2" src="https://raw.githubusercontent.com/iridesc/ocolabstatic/master/resdig/img/aipay.jpeg" alt="Card image">
+                            </div>
+                            <div class="tab-pane text-center container" id="Wechatpay">
+                                <img class="donation_img rounded " id="donation_1" src="https://raw.githubusercontent.com/iridesc/ocolabstatic/master/resdig/img/wechatpay.jpeg" alt="Card image">
+                            </div>
+                        </div>
+
+                        <ul class="nav nav-tabs justify-content-center" style="width: 100%;">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab" href="#Alipay">支付宝</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#Wechatpay">微信</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body donation_text">
+                        <h4 class="card-title">或者捐点钱钱</h4>
+                        <p class="card-text">扫描下方二维码进行最直接的资金支持！这对我们意义非凡！ 您的资金将用于服务器、域名、带宽等的续费，也将用于购买硬件以加强引擎！ 最后将为开发者午餐加鸡腿！同样您的捐助信息将出现在本页下方的感谢墙!！
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" id="pushdownblock">
+            <div id="uplayer" class="col-4">
+                <div  class="offset-lg-5 offset-sm-2   col-lg-3 col-sm-8" >
+                    <div  id ="logobackground" class="btn-raised animate-shadow-2 animate-shadow-2">
+                        <img id= "logopic" onclick="drag()" src="https://raw.githubusercontent.com/iridesc/ocolabstatic/master/resdig/img/logo.png"  class="align-items-center rounded  img-fluid" alt="logo">
+                    </div>
+            </div>
+            </div>
+            <div id="marquee_text" class="col-4 py-1 py-sm-2 server_status">
+                <div class="marquee">
+                    <ul class="marquee-content-items">
+                        <li>滚动新闻测试</li>
+                    </ul>
+                </div>
+            </div>
+            <div id="header_info" class="col-4 h-100 my-1 d-none d-lg-flex row">
+                <div class="col row server_list ">
+                    <div class="btn-group server_status mx-auto">
+                        <button  type="button" class="btn btn-primary btn-raised server_status_text row btn-sm" style="" data-toggle="popover" data-trigger="focus"  >
+                            <div class="server_name">服务器1</div>
+                            <span class="badge server_status_color btn-success">运行中</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="col row server_list ">
+                    <div class="btn-group server_status mx-auto">
+                        <button  type="button" class="btn btn-primary btn-raised server_status_text row btn-sm" style="" data-toggle="popover" data-trigger="focus"  >
+                            <div class="server_name">服务器1</div><span class="badge server_status_color btn-success">运行中</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="col row server_list ">
+                    <div class="btn-group server_status mx-auto">
+                        <button  type="button" class="btn btn-primary btn-raised server_status_text row btn-sm" style="" data-toggle="popover" data-trigger="focus"  >
+                            <div class="server_name">服务器1</div><span class="badge server_status_color btn-success">运行中</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="header_folder" class="col-4 h-100 d-lg-none">
+                <div class="btn-group py-1 py-sm-3 dropdown d-flex server_status justify-content-end">
+                    <button class="navbar-toggler py-0  bg-light navbar-light collapsed" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="dropdown-menu d-block dropdown-menu-right" x-placement="bottom-end">
+                        <a class="dropdown-item server_status_small_text" href="#">
+                            <div class="server_name">服务器1</div>
+                            <span class="badge server_status_small_color btn-success">运行中</span></a>
+                        <a class="dropdown-item server_status_small_text" href="#"><div class="server_name">服务器1</div><span class="badge server_status_small_color btn-success">运行中</span></a>
+                        <a class="dropdown-item server_status_small_text" href="#"><div class="server_name">服务器1</div><span class="badge server_status_small_color btn-success">运行中</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<div id="main_body" class="row align-items-center" onclick="historyanimationin()">
+    <div class="col-1 px-0 p-lg-3 col-sm-2 navbar-fixed-bottom align-self-end " id="commit_part">
+    <img src="https://raw.githubusercontent.com/iridesc/ocolabstatic/master/resdig/img/commit.png" class="col-10 px-0 card mx-auto d-lg-none animate-shadow-2 " id="commit_pic">
+    <div class="card d-none d-lg-block">
+        <div class="card panel">
+            <div data-toggle="collapse" id="commit_header" href="#commit_board" aria-expanded="true" class="card-header justify-content-center row">
+                <a id=" test" class="card-link ">留言板</a>
+            </div>
+            <div id="commit_board" class="collapse">
+                <ul id="commit_list" style="     overflow-y: auto;height: 30vh;" class="card-body">
+                    <li class="news-item">
+                        <table class="card news-item-sub">
+                            <tbody>
+                            <tr class="commit_area row">
+                                <td class="col-6 commit_title">test</td>
+                                <td class="col-6">2019/03/02</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </li>
+                    <li class="news-item">
+                        <table class="card news-item-sub">
+                            <tbody>
+                            <tr class="commit_area row">
+                                <td class="col-6 commit_title">ssssssssssssssssssssssssssss</td>
+                                <td class="col-6">2019/03/02</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </li>
+                    <li class="news-item">
+                        <table class="card news-item-sub">
+                            <tbody>
+                            <tr class="commit_area row">
+                                <td class="col-6 commit_title">ssssssssssssssssssssssssssss</td>
+                                <td class="col-6">2019/03/02</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </li>
+                    <li class="news-item">
+                        <table class="card news-item-sub">
+                            <tbody>
+                            <tr class="commit_area row">
+                                <td class="col-6 commit_title">ssssssssssssssssssssssssssss</td>
+                                <td class="col-6">2019/03/02</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </li>
+                </ul>
+                <!--<div id="upanddown" class=" card-body justify-content-end"> <button class="prev card  btn btn-light"> <img src="https://raw.githubusercontent.com/iridesc/ocolabstatic/master/resdig/img/up.png" class="control_button"> </button> <button class="next card  btn btn-light"> <img src="https://raw.githubusercontent.com/iridesc/ocolabstatic/master/resdig/img/down.png" class="control_button"> </button> </div>-->
+                <div id="commit_input" class="card-body input-group">
+                    <textarea class="form-control" id="describe" placeholder="说两句"></textarea>
+                    <div class="input-group-append">
+                        <button id="submit_button" type="submit" class="btn btn-primary mx-auto">提交</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="middlepart" class="col-10 px-0 col-sm-8 mx-auto">
+        <div id="searchview" class="col-lg-6 mt-0  mx-auto flex-column">
+            <div id="searchview_sub" class="">
+                <div id="wordslogo" class="">
+                    <img src="https://raw.githubusercontent.com/iridesc/ocolabstatic/master/resdig/img/wordslogo_1.png" id="wordslogo_pic" class="col">
+                </div>
+                <div id="searchinput" class="input-group ">
+                    <input id="searchinput_input" type="text" class="form-control " onclick="historyanimationout()" oninput="" placeholder="Search" data-provide="typeahead" autocomplete="off"><!--onblur="historyanimationin()"-->
+                    <div class="input-group-append">
+                        <button id="searchinput_button" class="btn btn-go " type="submit">Go</button>
+                    </div>
+                </div>
+                <div id="search_history_suggestion" class="list-group bmd-list-group-sm" @click.stop="userClick=true">
+                    <a href="#" class="list-group-item list-group-item-action" onclick="console.log('yes')">First item</a>
+                    <a href="#" class="list-group-item list-group-item-action">Second item</a>
+                    <a href="#" class="list-group-item list-group-item-action">Third item</a>
+                </div>
+                <div id="task_button" class="col-3 btn btn-raised btn-danger text-center py-0 mx-auto card-body">
+                    <div class="mx-auto mt-2">TASK</div>
+                </div>
+            </div>
+            <div id="alert_area" >
+            </div>
+        </div>
+        <div id="result" class="card row flex-column">
+            <div id="result_navbar" class="col-2 col-lg-1 col-sm-2 d-flex card-body">
+                <div class="d-flex w-100 flex-column justify-content-between">
+                    <div>
+                        <div id="backbutton_field" class="d-flex ">
+                            <div id="backbutton" class="btn btn-go  text-center w-100 bmd-btn-fab">
+                                <img id="backbutton_pic" src="https://raw.githubusercontent.com/iridesc/ocolabstatic/master/resdig/img/back.png">
+                            </div>
+                        </div>
+                        <div class="nav flex-column nav-pills  text-center" id="tab" role="tablist" aria-orientation="vertical">
+                            <a class="d-none card px-0 d-sm-block nav-link disabled  btn-go" id="title-tab">资源类型</a>
+                            <img class="d-sm-none card w-100 px-2 disabled  btn-go" src="https://raw.githubusercontent.com/iridesc/ocolabstatic/master/resdig/img/filter.png">
+                            <a class="nav-link card px-0 col-12 show active " id="Pan-tab" data-toggle="pill" href="#Pan" role="tab" aria-controls="Pan" aria-selected="true" onclick="
+         commontab();">Pan</a>
+                            <a class="nav-link card px-0 col-12" id="Thunder-tab" data-toggle="pill" href="#Thunder" role="tab" aria-controls="Thunder" aria-selected="false" onclick="
+        commontab();">Thunder</a>
+                            <a class="nav-link card px-0 col-12" id="Ed2k-tab" data-toggle="pill" href="#Ed2k" role="tab" aria-controls="Ed2k" aria-selected="false" onclick="
+        commontab();">Ed2k</a>
+                            <a class="nav-link card px-0 col-12" id="Magnet-tab" data-toggle="pill" href="#Magnet" role="tab" aria-controls="Magnet" aria-selected="false" onclick="
+        commontab();">Magnet</a>
+
+                            <a class="nav-link card px-0 mt-5 col-12" id="Task-tab" data-toggle="pill" href="#Task" role="tab" aria-controls="Task" aria-selected="false" onclick="
+        recheck_button_invisible();">Task</a>
+                        </div>
+                    </div>
+                    <div id="top-field">
+                        <button class="btn px-2 btn-raised btn-danger" id="top"><div>
+                            <img class="control_button" src="https://raw.githubusercontent.com/iridesc/ocolabstatic/master/resdig/img/top.png">
+                            <div class="d-none d-sm-block">top</div>
+                        </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="resultlist" class="col-10 col-lg-11 col-sm-10 card-body">
+                <div id="result_header" class="d-flex mb-1">
+                    <div id="searchkey" class="text-center">
+                            <h4 id="searchkeywords">
+                                去首页搜搜？
+                            </h4>
+                    </div>
+                    <div id="recheckbutton_field"  class="align-self-end  my-auto py-0">
+                        <button onclick="refresh_method();" class="btn btn-primary" data-container="body" data-toggle="popover" data-placement="bottom" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
+                            <img id="recheckbutton" src="https://raw.githubusercontent.com/iridesc/ocolabstatic/master/resdig/img/refresh.png">
+                        </button>
+                    </div>
+                </div>
+                <div id="result_content">
+                    <div class="tab-content card" id="tabContent">
+                        <div class="tab-pane fade active show" id="Pan" role="tabpanel" aria-labelledby="Pan-tab">
+                            <ul class="list-group" id="Pan_table">
+                            <div class="jumbotron" id="Pan_jumbotron">
+                                <h1 class="display-4">emmmmm</h1>
+                                <p class="lead">你貌似没有提交关键字，本挖掘机不知道你想要啥</p>
+                                <hr class="my-4">
+                                <p>要不去首页搜一下？</p>
+                                <a class="btn btn-primary btn-lg" href="#" role="button">回首页</a>
+                            </div>
+                            </ul>
+                        </div>
+                        <div class="tab-pane fade" id="Thunder" role="tabpanel" aria-labelledby="Thunder-tab">
+                            <ul class="list-group" id="Thunder_table">
+                            <div class="jumbotron" id="Thunder_jumbotron">
+                                <h1 class="display-4">emmmmm</h1>
+                                <p class="lead">你貌似没有提交关键字，本挖掘机不知道你想要啥</p>
+                                <hr class="my-4">
+                                <p>要不去首页搜一下？</p>
+                                <a class="btn btn-primary btn-lg" href="#" role="button">回首页</a>
+                            </div>
+                            </ul>
+                        </div>
+                        <div class="tab-pane fade" id="Ed2k" role="tabpanel" aria-labelledby="Ed2k-tab">
+                            <ul class="list-group" id="Ed2k_table">
+
+                            <div class="jumbotron" id="Ed2k_jumbotron">
+                                <h1 class="display-4">emmmmm</h1>
+                                <p class="lead">你貌似没有提交关键字，本挖掘机不知道你想要啥</p>
+                                <hr class="my-4">
+                                <p>要不去首页搜一下？</p>
+                                <a class="btn btn-primary btn-lg" href="#" role="button">回首页</a>
+                            </div>
+                            </ul>
+                        </div>
+                        <div class="tab-pane fade" id="Magnet" role="tabpanel" aria-labelledby="Magnet-tab">
+                            <ul class="list-group" id="Magnet_table">
+
+                            <div class="jumbotron"id="Magnet_jumbotron">
+                                <h1 class="display-4">emmmmm</h1>
+                                <p class="lead">你貌似没有提交关键字，本挖掘机不知道你想要啥</p>
+                                <hr class="my-4">
+                                <p>要不去首页搜一下？</p>
+                                <a class="btn btn-primary btn-lg" href="#" role="button">回首页</a>
+                            </div>
+                            </ul>
+                        </div>
+                        <div class="tab-pane fade" id="Task" role="tabpanel" aria-labelledby="Task-tab">
+                            <ul class="list-group" id="Task_table">
+
+                            <div class="jumbotron" id="Task_jumbotron">
+                                <h1 class="display-4">emmmmm</h1>
+                                <p class="lead">真巧，挖掘引擎正空着</p>
+                                <hr class="my-4">
+                                <p>要不去首页搜一下？</p>
+                                <a class="btn btn-primary btn-lg" href="#" role="button">回首页</a>
+                            </div>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card panel" id="commit_lg">
+        <div data-toggle="collapse" id="commit_header_lg" href="#commit_board_lg" aria-expanded="true" class="card-header justify-content-center row">
+            <a class="card-link ">留言板</a>
+        </div>
+        <div id="commit_board_lg" class="">
+            <ul id="commit_list_lg" style="    overflow-y: auto;height: 30vh;" class="card-body">
+                <li class="news-item">
+                    <table class="card news-item-sub">
+                        <tbody>
+                        <tr class="commit_area row">
+                            <td class="col-6 commit_title">ssssssssssssssssssssssssssss</td>
+                            <td class="col-6">2019/03/02</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </li>
+                <li class="news-item">
+                    <table class="card news-item-sub">
+                        <tbody>
+                        <tr class="commit_area row">
+                            <td class="col-6 commit_title">ssssssssssssssssssssssssssss</td>
+                            <td class="col-6">2019/03/02</td>
+                        </tr>
+                        </tbody></table>
+                </li>
+                <li class="news-item">
+                    <table class="card news-item-sub">
+                        <tbody>
+                        <tr class="commit_area row">
+                            <td class="col-6 commit_title">ssssssssssssssssssssssssssss</td>
+                            <td class="col-6">2019/03/02</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </li>
+                <li class="news-item">
+                    <table class="card news-item-sub">
+                        <tbody>
+                        <tr class="commit_area row">
+                            <td class="col-6 commit_title">ssssssssssssssssssssssssssss</td>
+                            <td class="col-6">2019/03/02</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </li>
+            </ul>
+            <!--<div id="upanddown_lg" class=" card-body d-flex justify-content-end"> <button class="prev card  btn btn-light"> <img src="https://raw.githubusercontent.com/iridesc/ocolabstatic/master/resdig/img/up.png" class="control_button"> </button> <button class="next card  btn btn-light"> <img src="https://raw.githubusercontent.com/iridesc/ocolabstatic/master/resdig/img/down.png" class="control_button"> </button> </div>-->
+            <div id="commit_input_lg" class="card-body input-group">
+                <textarea class="form-control" id="describe_lg" placeholder="说两句"></textarea>
+                <div class="input-group-append">
+                    <button  id="submit_button_lg" type="submit" class="btn btn-primary mx-auto">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+        <img src="https://raw.githubusercontent.com/iridesc/ocolabstatic/master/resdig/img/app-v2.2.png" id="app_qrcode_lg" class=" col-9  mx-auto card animate-shadow-2">
+    </div>
+    <div class="col-1 px-0 p-lg-3 col-sm-2 navbar-fixed-bottom align-self-end" id="app_qrcode_field">
+        <img src="https://raw.githubusercontent.com/iridesc/ocolabstatic/master/resdig/img/app-v2.2.png" id="app_qrcode" class=" col-9 card offset-3 d-none d-lg-block animate-shadow-2">
+        <img src="https://raw.githubusercontent.com/iridesc/ocolabstatic/master/resdig/img/QR.png" id="app_qrcode_pic" class="mx-auto col-10 px-0 card d-lg-none animate-shadow-2">
+    </div>
+</div>
+</body>
+</html>
+<script>
+</script>
+<!--             <div id="result" class="card flex-column">
+                <div id="result_navbar" class="row card-header">
+                    <div id="backbutton_field">
+                    <div id="backbutton" class="btn btn-go bmd-btn-fab">
+                        <img  id="backbutton_pic"  src="https://raw.githubusercontent.com/iridesc/ocolabstatic/master/resdig/img/back.png">
+                    </div>
+                    </div>
+                    <div id="searchkey" class="" >
+                        <span id="searchkeywords" >
+                            死侍
+                        </span>
+                    </div>
+                </div>
+                <div id="resultlist" class="card-body">
+                    <div class="bd-example bd-example-tabs">
+                        <div class="row">
+                            <div class="col-1 d-flex flex-column justify-content-between">
+                                <div class="nav flex-column nav-pills card text-center" id="tab" role="tablist" aria-orientation="vertical">
+                                    <a class="nav-link disabled btn-go" id="title-tab">资源类型</a>
+                                    <a class="nav-link active show" id="Pan-tab" data-toggle="pill" href="#Pan" role="tab" aria-controls="Pan" aria-selected="true">Pan</a>
+                                    <a class="nav-link " id="Thunder-tab" data-toggle="pill" href="#Thunder" role="tab" aria-controls="Thunder" aria-selected="false">Thunder</a>
+                                    <a class="nav-link" id="Ed2k-tab" data-toggle="pill" href="#Ed2k" role="tab" aria-controls="Ed2k" aria-selected="false">Ed2k</a>
+                                    <a class="nav-link" id="Magnet-tab" data-toggle="pill" href="#Magnet" role="tab" aria-controls="Magnet" aria-selected="false">Magnet</a>
+                                </div>
+                                <div id="top-field">
+                                    <button class="btn btn-raised btn-danger" id="top"><div>
+                                        <img class="control_button" src="https://raw.githubusercontent.com/iridesc/ocolabstatic/master/resdig/img/top.png">
+                                        <div>top</div>
+                                    </div>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-11">
+                                <div class="tab-content card" id="tabContent">
+                                    <div class="tab-pane fade active show" id="Pan" role="tabpanel" aria-labelledby="Pan-tab">
+                                        <ul class="list-group" id="list_content">
+                                            <li class="list-group-item list-group-item-action justify-content-between d-flex">
+                                                <div class="sort control_button_big">
+                                                    1
+                                                </div>
+                                                <div class="filename">
+                                                    Deadpool.2016.1080p.BluRay.REMUX.AVC.DTS-HD.MA.7.1-RARBG
+                                                </div>
+                                                <div class="operation">
+                                                    <a class="url" href="thunder://QUFtYWduZXQ6P3h0PXVybjpidGloOjQ1YTBjOTRjZTAxZWYyOWM2ZDMxOTkwYTEyMTMwMWRiMTM5ZDYyNWImZG49RGVhZHBvb2wuMjAxNi4xMDgwcC5CbHVSYXkuUkVNVVguQVZDLkRUUy1IRC5NQS43LjEtUkFSQkcmdHI9aHR0cDovL3RyYWNrZXIudHJhY2tlcmZpeC5jb206ODAvYW5ub3VuY2UmdHI9dWRwOi8vOS5yYXJiZy5tZToyNzEwL2Fubm91bmNlJnRyPXVkcDovLzkucmFyYmcudG86MjcxMC9hbm5vdW5jZVpa">
+                                                        <img src="https://raw.githubusercontent.com/iridesc/ocolabstatic/master/resdig/img/url.png" class="originalurl control_button_big btn "/>
+                                                    </a>
+                                                    <img src="https://raw.githubusercontent.com/iridesc/ocolabstatic/master/resdig/img/copy.png"  data-clipboard-action="copy" data-clipboard-text="thunder://QUFtYWduZXQ6P3h0PXVybjpidGloOjQ1YTBjOTRjZTAxZWYyOWM2ZDMxOTkwYTEyMTMwMWRiMTM5ZDYyNWImZG49RGVhZHBvb2wuMjAxNi4xMDgwcC5CbHVSYXkuUkVNVVguQVZDLkRUUy1IRC5NQS43LjEtUkFSQkcmdHI9aHR0cDovL3RyYWNrZXIudHJhY2tlcmZpeC5jb206ODAvYW5ub3VuY2UmdHI9dWRwOi8vOS5yYXJiZy5tZToyNzEwL2Fubm91bmNlJnRyPXVkcDovLzkucmFyYmcudG86MjcxMC9hbm5vdW5jZVpa" class=" control_button_big btn copy">
+                                                </div>
+                                            </li>
+                                            <li class="list-group-item list-group-item-action">Dapibus ac facilisis in</li>
+                                            <li class="list-group-item list-group-item-action">Morbi leo risus</li>
+                                            <li class="list-group-item list-group-item-action">Porta ac consectetur ac</li>
+                                            <li class="list-group-item list-group-item-action">Vestibulum at eros</li>
+                                            <li class="list-group-item list-group-item-action">Cras justo odio</li>
+                                            <li class="list-group-item list-group-item-action">Dapibus ac facilisis in</li>
+                                            <li class="list-group-item list-group-item-action">Morbi leo risus</li>
+                                            <li class="list-group-item list-group-item-action">Porta ac consectetur ac</li>
+                                            <li class="list-group-item list-group-item-action">Vestibulum at eros</li>
+                                            <li class="list-group-item list-group-item-action">Cras justo odio</li>
+                                            <li class="list-group-item list-group-item-action">Dapibus ac facilisis in</li>
+                                            <li class="list-group-item list-group-item-action">Morbi leo risus</li>
+                                            <li class="list-group-item list-group-item-action">Porta ac consectetur ac</li>
+                                            <li class="list-group-item list-group-item-action">Vestibulum at eros</li>
+                                            <li class="list-group-item list-group-item-action">Cras justo odio</li>
+                                            <li class="list-group-item list-group-item-action">Dapibus ac facilisis in</li>
+                                            <li class="list-group-item list-group-item-action">Morbi leo risus</li>
+                                            <li class="list-group-item list-group-item-action">Porta ac consectetur ac</li>
+                                            <li class="list-group-item list-group-item-action">Vestibulum at eros</li>
+                                        </ul>
+                                    </div>
+                                    <div class="tab-pane fade " id="Thunder" role="tabpanel" aria-labelledby="Thunder-tab">
+                                        <ul class="list-group">
+                                            <li class="list-group-item list-group-item-action">Cras justo odio</li>
+                                            <li class="list-group-item list-group-item-action">Dapibus ac facilisis in</li>
+                                            <li class="list-group-item list-group-item-action">Morbi leo risus</li>
+                                            <li class="list-group-item list-group-item-action">Porta ac consectetur ac</li>
+                                            <li class="list-group-item list-group-item-action">Vestibulum at eros</li>
+                                            <li class="list-group-item list-group-item-action">Cras justo odio</li>
+                                            <li class="list-group-item list-group-item-action">Dapibus ac facilisis in</li>
+                                            <li class="list-group-item list-group-item-action">Morbi leo risus</li>
+                                            <li class="list-group-item list-group-item-action">Porta ac consectetur ac</li>
+                                            <li class="list-group-item list-group-item-action">Vestibulum at eros</li>
+                                            <li class="list-group-item list-group-item-action">Cras justo odio</li>
+                                            <li class="list-group-item list-group-item-action">Dapibus ac facilisis in</li>
+                                            <li class="list-group-item list-group-item-action">Morbi leo risus</li>
+                                            <li class="list-group-item list-group-item-action">Porta ac consectetur ac</li>
+                                            <li class="list-group-item list-group-item-action">Vestibulum at eros</li>
+                                            <li class="list-group-item list-group-item-action">Cras justo odio</li>
+                                            <li class="list-group-item list-group-item-action">Dapibus ac facilisis in</li>
+                                            <li class="list-group-item list-group-item-action">Morbi leo risus</li>
+                                            <li class="list-group-item list-group-item-action">Porta ac consectetur ac</li>
+                                            <li class="list-group-item list-group-item-action">Vestibulum at eros</li>
+                                        </ul>
+                                    </div>
+                                    <div class="tab-pane fade" id="Ed2k" role="tabpanel" aria-labelledby="Ed2k-tab">
+                                        <ul class="list-group">
+                                            <li class="list-group-item list-group-item-action">Cras justo odio</li>
+                                            <li class="list-group-item list-group-item-action">Dapibus ac facilisis in</li>
+                                            <li class="list-group-item list-group-item-action">Morbi leo risus</li>
+                                            <li class="list-group-item list-group-item-action">Porta ac consectetur ac</li>
+                                            <li class="list-group-item list-group-item-action">Vestibulum at eros</li>
+                                            <li class="list-group-item list-group-item-action">Cras justo odio</li>
+                                            <li class="list-group-item list-group-item-action">Dapibus ac facilisis in</li>
+                                            <li class="list-group-item list-group-item-action">Morbi leo risus</li>
+                                            <li class="list-group-item list-group-item-action">Porta ac consectetur ac</li>
+                                            <li class="list-group-item list-group-item-action">Vestibulum at eros</li>
+                                            <li class="list-group-item list-group-item-action">Cras justo odio</li>
+                                            <li class="list-group-item list-group-item-action">Dapibus ac facilisis in</li>
+                                            <li class="list-group-item list-group-item-action">Morbi leo risus</li>
+                                            <li class="list-group-item list-group-item-action">Porta ac consectetur ac</li>
+                                            <li class="list-group-item list-group-item-action">Vestibulum at eros</li>
+                                            <li class="list-group-item list-group-item-action">Cras justo odio</li>
+                                            <li class="list-group-item list-group-item-action">Dapibus ac facilisis in</li>
+                                            <li class="list-group-item list-group-item-action">Morbi leo risus</li>
+                                            <li class="list-group-item list-group-item-action">Porta ac consectetur ac</li>
+                                            <li class="list-group-item list-group-item-action">Vestibulum at eros</li>
+                                        </ul>
+                                    </div>
+                                    <div class="tab-pane fade" id="Magnet" role="tabpanel" aria-labelledby="Magnet-tab">
+                                        <ul class="list-group">
+                                            <li class="list-group-item list-group-item-action">Cras justo odio</li>
+                                            <li class="list-group-item list-group-item-action">Dapibus ac facilisis in</li>
+                                            <li class="list-group-item list-group-item-action">Morbi leo risus</li>
+                                            <li class="list-group-item list-group-item-action">Porta ac consectetur ac</li>
+                                            <li class="list-group-item list-group-item-action">Vestibulum at eros</li>
+                                            <li class="list-group-item list-group-item-action">Cras justo odio</li>
+                                            <li class="list-group-item list-group-item-action">Dapibus ac facilisis in</li>
+                                            <li class="list-group-item list-group-item-action">Morbi leo risus</li>
+                                            <li class="list-group-item list-group-item-action">Porta ac consectetur ac</li>
+                                            <li class="list-group-item list-group-item-action">Vestibulum at eros</li>
+                                            <li class="list-group-item list-group-item-action">Cras justo odio</li>
+                                            <li class="list-group-item list-group-item-action">Dapibus ac facilisis in</li>
+                                            <li class="list-group-item list-group-item-action">Morbi leo risus</li>
+                                            <li class="list-group-item list-group-item-action">Porta ac consectetur ac</li>
+                                            <li class="list-group-item list-group-item-action">Vestibulum at eros</li>
+                                            <li class="list-group-item list-group-item-action">Cras justo odio</li>
+                                            <li class="list-group-item list-group-item-action">Dapibus ac facilisis in</li>
+                                            <li class="list-group-item list-group-item-action">Morbi leo risus</li>
+                                            <li class="list-group-item list-group-item-action">Porta ac consectetur ac</li>
+                                            <li class="list-group-item list-group-item-action">Vestibulum at eros</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>-->
+<!--        <div class="col-2 navbar-fixed-bottom align-self-end" id="report_card">
+            <div id="accordion" class="shadow-3">
+                <div class="card ">
+                <div data-toggle="collapse" id="report_header" href="#commit_board" aria-expanded="true" class="card-header row">
+                    <a class="card-link mx-auto">BUG 反馈</a>
+                </div>
+                <div id="commit_board" class="collapse " data-parent="#accordion" style="">
+                    <div class="card-body">
+                        <div  class="container row mx-auto">
+
+                            <form class="mx-auto">
+
+                                <div class="form-group">
+                                    <label for="id">昵称:</label>
+                                    <input class="form-control" id="id" placeholder="怎么称呼你呢">
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email:</label>
+                                    <input type="email" class="form-control" id="email" placeholder="留下邮箱便于反馈">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="describe">*BUG描述:</label>
+                                    <textarea class="form-control" id="describe" placeholder="居然有bug"></textarea>
+                                </div>
+                            </form>
+
+                            <button type="submit" class="btn btn-primary mx-auto">提交</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+
+
+
+
+
+
+                    <div id="filter">
+                        <form>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" value="" checked=""><span class="checkbox-decorator"><span class="check"></span></span>
+                                    pan
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" value="" checked=""><span class="checkbox-decorator"><span class="check"></span></span>
+                                    thunder
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" value="" checked=""><span class="checkbox-decorator"><span class="check"></span></span>
+                                    magnet
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" value="" checked=""><span class="checkbox-decorator"><span class="check"></span></span>
+                                    ed2k
+                                </label>
+                            </div>
+                        </form>
+                    </div>-->

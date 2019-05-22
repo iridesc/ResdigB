@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ch">
+<head>
+    <meta charset="UTF-8">
+    <title>OcO-Market</title>
+    <link rel="shortcut icon" href="{% static '/market/favicon.ico' %}" />
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?b9bdd5e85652bd592ea251e1319f7856";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+    {% load staticfiles %}
+</head>
+<body>
+
+<nav class="navbar navbar-expand-md bg-dark navbar-dark fixed-top">
+    <!-- Brand -->
+
+<img src="{% static '/market/logo.svg' %}" alt="Logo" width="20%" height="20%">
+
+
+    <!-- Toggler/collapsibe Button -->
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Navbar links -->
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav">
+        </ul>
+    </div>
+</nav>
+<main>
+
+
+    <!-- 轮播 -->
+    <div class="carousel slide" data-ride="carousel">
+
+        <!-- 指示符 -->
+        <ol class="carousel-indicators">
+            <li data-target="#demo" data-slide-to="0" class="active"></li>
+            <li data-target="#demo" data-slide-to="1"></li>
+            <li data-target="#demo" data-slide-to="2"></li>
+        </ol>
+
+        <!-- 轮播图片 -->
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img width="100%" height="100%" src="{%static '/market/roll_1.jpeg' %}" >
+                <div class="container">
+                    <div class="carousel-caption text-left">
+                        <h1>The King of Vitamin C</h1>
+                        <p>被称为维C果王的男人,不,果子--猕猴桃</p>
+                        <br>
+                        <br>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img width="100%" height="100%"  src="{%static '/market/roll_2.jpeg' %}">
+                <div class="container">
+                    <div class="carousel-caption">
+                        <h1>果成精了!</h1>
+                        <p>吸附日月精华,收受秦岭山脉自然仙气,滋以西岐渭河之水,成就中国猕猴桃之乡--眉县</p>
+                        <br>
+                        <br>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img  width="100%" height="100%"  src="{%static '/market/roll_3.jpeg' %}">
+                <div class="container">
+                    <div class="carousel-caption text-right">
+                        <h1>丰收季节</h1>
+                        <p>他叔,他姨,正在买桃!你不支持一下??? </p>
+
+                        <br>
+                        <br>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 左右切换按钮 -->
+        <a class="carousel-control-prev" href="#demo" data-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </a>
+        <a class="carousel-control-next" href="#demo" data-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </a>
+
+    </div>
+
+
+    <!--产品列表-->
+    <section id="productlist">
+        <div class="container">
+            <div class="album py-5 bg-light">
+                <!-- 购买弹窗 -->
+                <div class="modal fade" id="Modal_YD">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            <!-- 模态框头部 -->
+                            <div class="modal-header">
+                                <h4 class="modal-title">选择一种交易方式!</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+
+                            <!-- 模态框主体 -->
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <img height="100%" width="100%" src="{%static '/market/xy.png' %}">
+
+
+                                    </div>
+                                    <div class="col-md-6">
+                                        <img  height="100%" width="100%" src="{%static '/market/wx.jpg' %}">
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 模态框底部 -->
+                            <div class="modal-footer">
+                                <div class="modal-body">
+                                    <div class="row">
+
+                                        <div class="col-md-6">
+
+                                            <h3>咸鱼/淘宝 扫码</h3>
+                                        </div>
+                                        <div class="col-md-6">
+
+                                            <h3>微信 扫码</h3>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                        <div class="col-md-6">
+                            <div class="card mb-4 shadow-sm">
+                                <img class="card-img-top" src="{% static '/market/main_1.jpeg' %}"  alt="Card image cap">
+                                <div class="card-body">
+                                    <p class="card-text">优质徐香猕猴桃 5 kg</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary btn-primary" data-toggle="modal" data-target="#Modal_YD" >预定</button>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary btn-primary" data-toggle="modal" data-target="#Modal_x_1">详情</button>
+                                        </div>
+                                        <p><small>¥</small>95</p>
+                                        <p>包邮</p>
+                                        <br>
+
+                                        <div class="modal fade" id="Modal_x_1">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+
+                                                    <!-- 模态框头部 -->
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">优质徐香猕猴桃 5 kg</h4>
+                                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    </div>
+
+                                                    <!-- 模态框主体 -->
+                                                    <div class="modal-body">
+                                                        <ul class="list-group">
+                                                            <li class="list-group-item ">品种: 徐香</li>
+                                                            <li class="list-group-item">规格: 5 kg</li>
+                                                            <li class="list-group-item">单个果重: >=100g</li>
+                                                            <li class="list-group-item">产地: 陕西 宝鸡 眉县 金渠镇</li>
+                                                        </ul>
+                                                    </div>
+
+                                                    <!-- 模态框底部 -->
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                        <div class="col-md-6">
+                            <div class="card mb-4 shadow-sm">
+                                <img class="card-img-top" src="{% static '/market/main_2.jpeg' %}" alt="Card image cap">
+                                <div class="card-body">
+                                    <p class="card-text">优质徐香猕猴桃 2.5 kg</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary btn-primary" data-toggle="modal" data-target="#Modal_YD" >预定</button>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary btn-primary" data-toggle="modal" data-target="#Modal_x_2">详情</button>
+                                        </div>
+                                        <p> <small>¥</small>45</p>
+                                        <p>包邮</p>
+                                        <br>
+
+                                        <!-- 模态框 -->
+                                        <div class="modal fade" id="Modal_x_2">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+
+                                                    <!-- 模态框头部 -->
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">优质徐香猕猴桃 2.5 kg</h4>
+                                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    </div>
+
+                                                    <!-- 模态框主体 -->
+                                                    <div class="modal-body">
+                                                        <ul class="list-group">
+                                                            <li class="list-group-item ">品种: 徐香</li>
+                                                            <li class="list-group-item">规格: 2.5 kg</li>
+                                                            <li class="list-group-item">单个果重: >=100g</li>
+                                                            <li class="list-group-item">产地: 陕西 宝鸡 眉县  金渠镇</li>
+                                                        </ul>
+                                                    </div>
+
+                                                    <!-- 模态框底部 -->
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+</main>
+
+<footer class="text-muted">
+    <div class="container">
+        <div class="row">
+
+            <div  class="col-4">
+                <a href="/resdig">
+                    <img width="50%" height="50%"  src="{% static '/resdig/logo.svg' %}"/>
+                    <h4>Resdig资源挖掘机</h4>
+                </a>
+                <hr>
+                <p>以最短的时间获取最优质的资源!</p>
+            </div>
+
+            <div class="col-4">
+                <a href="/lab">
+                    <img width="50%" height="50%"  src="{% static '/lab/logo.svg' %}"/>
+                    <h4>OCO-LAB</h4>
+                </a>
+                <hr>
+                <p>OCO实验室是OCO团队奇思妙想的集合地!</p>
+            </div>
+
+            <div class="col-4">
+                <a href="/gcc">
+                <img width="50%" height="50%" src="{% static '/gcc/logo.svg' %}"/>
+                <h4>OCO-GCC</h4>
+                </a>
+                <hr>
+                <p>基于 Google Closure Compiler 的 WebApi 开发的中国版js代码压缩加密工具!</p>
+            </div>
+
+        </div>
+    </div>
+</footer>
+
+
+
+
+</body>
+</html>
