@@ -1,0 +1,14 @@
+resdig.com/static/, www.resdig.com/static/ {
+    gzip
+    root /home/ubuntu/ocolab/static/
+}   
+
+
+resdig.com, www.resdig.com {
+    gzip
+    log ../caddy.log
+    root /home/ubuntu/ocolab/
+    proxy / localhost:8000 {
+        transparent
+    }
+}   

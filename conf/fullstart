@@ -1,0 +1,8 @@
+#!/bin/bash
+echo 'starting caddy...'
+nohup caddy &
+echo 'done.'
+echo 'starting gunicorn...'
+cd ..
+nohup gunicorn -b "127.0.0.1:8000" writeval.wsgi &
+echo 'done!'
