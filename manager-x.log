@@ -88,3 +88,13 @@ Traceback (most recent call last):
   File "C:\Program Files\Python37\lib\multiprocessing\managers.py", line 811, in _callmethod
     raise convert_to_error(kind, result)
 django.db.utils.InternalError: (1054, "Unknown column 'resdig_resourcetable.filename' in 'field list'")
+---------------------2019-05-22 20:14:40---------------------
+Traceback (most recent call last):
+  File "manager-x.py", line 354, in <module>
+    reguler.act(cache)
+  File "manager-x.py", line 324, in act
+    F()
+  File "<string>", line 2, in updatebackground
+  File "/usr/lib/python3.7/multiprocessing/managers.py", line 811, in _callmethod
+    raise convert_to_error(kind, result)
+FileNotFoundError: [Errno 2] No such file or directory: './static/resdig/background.jpg'
