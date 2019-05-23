@@ -123,8 +123,7 @@ Only need to call the createMarquee() function. Optionally: pass through the fol
       var spawnAmount =1;
       //init vars from input
 
-
-      console.log(config);
+      // console.log(config);
 
       $(config.marquee_class).remove();
 

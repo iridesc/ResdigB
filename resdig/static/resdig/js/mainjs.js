@@ -240,12 +240,12 @@ function qrswitchtosearchview() {
     });
 }
 function initcopy() {
-    console.log("ff");
+    // console.log("ff");
     var clipboard = new ClipboardJS('.copy');
     clipboard.on('success', function(e) {
         tempe=e;
         var trigger = $(e.trigger);
-        console.log("ria "+trigger);
+        // console.log("ria "+trigger);
         trigger.popover('show');
         trigger.on('shown.bs.popover',function () {
             setTimeout('$(tempe.trigger).popover(\'hide\')',3000);
@@ -332,7 +332,7 @@ function getElist(){
         var temp = new Array()
         test(Elist);
         if(Elist.length>3){
-            console.log('服务器数量异常')
+            // console.log('服务器数量异常')
         }else{
             for(var n=0;n<Elist.length;n++){
                 var o=new Object();
@@ -527,7 +527,7 @@ function cheekkey(keyword) {
                 continued=false;
                 switch(data.statu){
                     case "digging":
-                        console.log("到了");
+                        // console.log("到了");
                         $('#alert_area').html(alert_html("挖掘中!","挖掘机已发动!请查看任务列表!!!","alert-success"));
 
                         break;
@@ -931,7 +931,7 @@ function recheckbutton_html(popcontent) {
         "                        </button>"
 }
 function test(t) {
-    console.log(t);
+    // console.log(t);
 }
 
 
