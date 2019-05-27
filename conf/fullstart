@@ -1,0 +1,29 @@
+#!/bin/bash
+echo '---------------------------------------'
+
+echo 'kill manager-x...'
+killall manager-x.py
+echo 'done.'
+
+echo 'kill gunicorn...'
+killall gunicorn
+echo 'done.'
+
+echo 'kill caddy...'
+killall caddy
+echo 'done.'
+
+echo 'starting caddy...'
+nohup caddy &
+echo 'done.'
+
+echo 'starting gunicorn...'
+cd ..
+nohup gunicorn -b "127.0.0.1:8000" writeval.wsgi &
+echo 'done.'
+
+echo 'starting manager-x...'
+nohup python3 manager-x.py &
+echo 'done.'
+
+echo '---------------------------------------'
