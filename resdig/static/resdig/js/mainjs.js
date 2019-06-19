@@ -672,10 +672,11 @@ function reslinemaker(res) {
     }
 
     function GetResBuffHtml(res) {
-        let buff_html = "<br>"
+        let buff_html = "<div>"
         res.tags.forEach(tag => {
             buff_html += '<span class=\"mx-auto badge badge-pill badge-' + tag.color + '\">' + tag.name + "</span>"
         });
+        buff_html+='</div>'
         return buff_html
 
     }
@@ -689,6 +690,7 @@ function reslinemaker(res) {
         "<a class=\"text-center my-auto\">" + getfilename(res) + "</a>" +
         GetResBuffHtml(res) +
         "</div>" +
+    
 
         "<div class=\"col-3 col-sm-2 col-lg-1 operation d-flex justify-content-sm-between\">" +
         "<a class=\"url mx-0\" href=\"" + res.web + "\">" +
