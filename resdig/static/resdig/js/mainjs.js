@@ -723,7 +723,7 @@ function reslistmaker(reslist) {
     for (var i = 0; i < reslist.length; i++) {
         var res = reslist[i];
         
-        if (i < 10) {
+        if (i < 50) {
             hqrtbodystr+=reslinemaker(res)
             hqramount+=1
         } 
