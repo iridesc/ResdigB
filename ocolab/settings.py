@@ -13,13 +13,6 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import os
 import json
 
-try:
-    setting = json.load(open('conf/setting.json'))
-except:
-    setting = {
-        'DEBUG': False,
-    }
-    json.dump(setting, open('conf/setting.json', 'w'), ensure_ascii=False)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -31,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'sb1scx*_#o4t7@hwwtk=nrrz#j^4rxbh!be#nj3%fycbhf)$sj'
 
 # SECURITY WARNING: don't run with debug turned on in production! 如果为ture 在出错时会暴露网站结构
-DEBUG = setting['DEBUG']
+DEBUG = False
 
 ALLOWED_HOSTS = '*'
 
