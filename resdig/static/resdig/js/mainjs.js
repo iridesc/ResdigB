@@ -1064,5 +1064,5 @@ function recheckbutton_html(popcontent) {
         "                        </button>"
 }
 function test(t) {
-    console.log(t);
+    // console.log(t);
 }
