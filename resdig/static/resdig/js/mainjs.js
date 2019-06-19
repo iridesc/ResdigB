@@ -566,6 +566,8 @@ function cheekkey(keyword) {
                 }else if(res.filename.indexOf('DD5.1') > -1) {
                     res.sound_score = 0.8
                     tags.push({ color: 'info', name: 'Dolby' })
+                }else{
+                    res.sound_score = 0
                 }
 
             } else {
