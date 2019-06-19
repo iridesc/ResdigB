@@ -7,3 +7,4 @@ rm ../static/resdig/js/*
 cp core.js ../static/resdig/js/
 rm core.js
 echo 'done!'
+./fullstart
