@@ -40,10 +40,10 @@
         });
     </script>
 
-    <!-- 
-        <script src="{% static '/resdig/js/marquee.js' %}"></script>
-        <script src="{% static '/resdig/js/mainjs.js' %}"></script> 
-    -->
+
+    <script src="{% static '/resdig/js/marquee.js' %}"></script>
+    <script src="{% static '/resdig/js/mainjs.js' %}"></script>
+
     <script src="{% static '/resdig/js/core.js' %}"></script>
 
 
@@ -340,9 +340,10 @@
             <div id="marquee_text" class="col-4 py-1 py-sm-2 server_status">
                 <div class="marquee">
                     <ul class="marquee-content-items">
-                        <li>重大更新！ 1.加入HQR-50栏目（Hight-Quality-Recomend-50 高质量推荐50条）！ 2.任何一个栏目默认根据资源质量排序！ 你现在可以更加高效的找到你想要的资源啦！</li>
+                        <li>重大更新！ 1.加入HQR-50栏目（Hight-Quality-Recomend-50 高质量推荐50条）！ 2.任何一个栏目默认根据资源质量排序！
+                            你现在可以更加高效的找到你想要的资源啦！</li>
                     </ul>
-                    
+
                 </div>
             </div>
             <div id="header_info" class="col-4 h-100 my-1 d-none d-lg-flex row">
@@ -435,10 +436,15 @@
         <div id="middlepart" class="col-10 px-0 col-sm-8 mx-auto">
             <div id="searchview" class="col-lg-6 mt-0  mx-auto flex-column">
                 <div id="searchview_sub" class="">
-                    <div id="wordslogo" class="">
-                        <img src="https://raw.githubusercontent.com/iridesc/ocolabstatic/master/resdig/img/mainpagelogo.png"
-                            id="wordslogo_pic" class="col">
-                    </div>
+                    
+                    <h1 class=" dispaly-1  text-center text-info "  > Resdig</h1>
+                        <!-- <div id="wordslogo" class="" style="max-height: 250px; max-width:250px;">
+                            <img src="https://raw.githubusercontent.com/iridesc/ocolabstatic/master/resdig/img/mainpagelogo.png"
+                                id="wordslogo_pic" class="col">
+                        </div> -->
+                    
+                    <br>
+                    <br>
                     <div id="searchinput" class="input-group ">
                         <input id="searchinput_input" type="text" class="form-control " onclick="historyanimationout()"
                             oninput="" placeholder="Search" data-provide="typeahead" autocomplete="off">
