@@ -9,6 +9,7 @@
     {% load staticfiles %}
     <link rel="icon" type="image/x-icon"
         href="https://raw.githubusercontent.com/iridesc/ocolabstatic/master/resdig/img/favicon.ico" />
+
     <link href="{% static '/resdig/css/bootstrap-material-design.css' %}" rel="stylesheet">
     <link href="{% static '/resdig/css/style.css' %}" rel="stylesheet">
     <link href="{% static '/resdig/css/animate.css' %}" rel="stylesheet">
@@ -28,7 +29,6 @@
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
-
         gtag('config', 'UA-140731879-2');
     </script>
     <!-- Global adSense -->
@@ -40,18 +40,14 @@
         });
     </script>
 
-
-    <script src="{% static '/resdig/js/core.js' %}"></script>
+    <script src="{% static '/resdig/js/marquee.js' %}"></script>
+    <script src="{% static '/resdig/js/mainjs.js' %}"></script>
 
 </head>
 
 <body ondragstart="return false;" oncontextmenu="return false;">
 
-    <!-- 
-    
-
-
- -->
+    <!-- -->
     <div id="loading_field" class="align-items-center row">
         <div class="col-2 mx-auto">
             <img id="loading" class="animated heartBeat"
@@ -226,69 +222,6 @@
                                     </thead>
                                     <div>
                                         <tbody>
-                                            <tr>
-                                                <td>2018/10/10 上午1:46:59</td>
-                                                <td>宿管老大</td>
-                                                <td>Device</td>
-                                                <td>神舟台式机一套</td>
-                                                <td>这位是个低调的捐献者!</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2018/10/10 上午1:46:59</td>
-                                                <td>宿管老大</td>
-                                                <td>Device</td>
-                                                <td>神舟台式机一套</td>
-                                                <td>这位是个低调的捐献者!</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2018/10/10 上午1:46:59</td>
-                                                <td>宿管老大</td>
-                                                <td>Device</td>
-                                                <td>神舟台式机一套</td>
-                                                <td>这位是个低调的捐献者!</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2018/10/10 上午1:46:59</td>
-                                                <td>宿管老大</td>
-                                                <td>Device</td>
-                                                <td>神舟台式机一套</td>
-                                                <td>这位是个低调的捐献者!</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2018/10/10 上午1:46:59</td>
-                                                <td>宿管老大</td>
-                                                <td>Device</td>
-                                                <td>神舟台式机一套</td>
-                                                <td>这位是个低调的捐献者!</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2018/10/10 上午1:46:59</td>
-                                                <td>宿管老大</td>
-                                                <td>Device</td>
-                                                <td>神舟台式机一套</td>
-                                                <td>这位是个低调的捐献者!</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2018/10/10 上午1:46:59</td>
-                                                <td>宿管老大</td>
-                                                <td>Device</td>
-                                                <td>神舟台式机一套</td>
-                                                <td>这位是个低调的捐献者!</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2018/10/10 上午1:46:59</td>
-                                                <td>宿管老大</td>
-                                                <td>Device</td>
-                                                <td>神舟台式机一套</td>
-                                                <td>这位是个低调的捐献者!</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2018/10/10 上午1:46:59</td>
-                                                <td>宿管老大</td>
-                                                <td>Device</td>
-                                                <td>神舟台式机一套</td>
-                                                <td>这位是个低调的捐献者!</td>
-                                            </tr>
                                             <tr>
                                                 <td>2018/10/10 上午1:46:59</td>
                                                 <td>宿管老大</td>
@@ -484,36 +417,6 @@
                                     </tbody>
                                 </table>
                             </li>
-                            <li class="news-item">
-                                <table class="card news-item-sub">
-                                    <tbody>
-                                        <tr class="commit_area row">
-                                            <td class="col-6 commit_title">ssssssssssssssssssssssssssss</td>
-                                            <td class="col-6">2019/03/02</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </li>
-                            <li class="news-item">
-                                <table class="card news-item-sub">
-                                    <tbody>
-                                        <tr class="commit_area row">
-                                            <td class="col-6 commit_title">ssssssssssssssssssssssssssss</td>
-                                            <td class="col-6">2019/03/02</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </li>
-                            <li class="news-item">
-                                <table class="card news-item-sub">
-                                    <tbody>
-                                        <tr class="commit_area row">
-                                            <td class="col-6 commit_title">ssssssssssssssssssssssssssss</td>
-                                            <td class="col-6">2019/03/02</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </li>
                         </ul>
                         <!--<div id="upanddown" class=" card-body justify-content-end"> <button class="prev card  btn btn-light"> <img src="https://raw.githubusercontent.com/iridesc/ocolabstatic/master/resdig/img/up.png" class="control_button"> </button> <button class="next card  btn btn-light"> <img src="https://raw.githubusercontent.com/iridesc/ocolabstatic/master/resdig/img/down.png" class="control_button"> </button> </div>-->
                         <div id="commit_input" class="card-body input-group">
@@ -570,22 +473,26 @@
                                 <a class="d-none card px-0 d-sm-block nav-link disabled  btn-go" id="title-tab">资源类型</a>
                                 <img class="d-sm-none card w-100 px-2 disabled  btn-go"
                                     src="https://raw.githubusercontent.com/iridesc/ocolabstatic/master/resdig/img/filter.png">
-                                <a class="nav-link card px-0 col-12 show active " id="Pan-tab" data-toggle="pill"
-                                    href="#Pan" role="tab" aria-controls="Pan" aria-selected="true" onclick="
-         commontab();">Pan</a>
+
+                                <a class="nav-link card px-0 col-12 show active" id="HQR-tab" data-toggle="pill"
+                                    href="#HQR" role="tab" aria-controls="HQR" aria-selected="false"
+                                    onclick="commontab();">HQR-10</a>
+
+                                <a class="nav-link card px-0 col-12 show active" id="Magnet-tab" data-toggle="pill"
+                                    href="#Magnet" role="tab" aria-controls="Magnet" aria-selected="false"
+                                    onclick="commontab();">Magnet</a>
                                 <a class="nav-link card px-0 col-12" id="Thunder-tab" data-toggle="pill" href="#Thunder"
-                                    role="tab" aria-controls="Thunder" aria-selected="false" onclick="
-        commontab();">Thunder</a>
+                                    role="tab" aria-controls="Thunder" aria-selected="false"
+                                    onclick="commontab();">Thunder</a>
                                 <a class="nav-link card px-0 col-12" id="Ed2k-tab" data-toggle="pill" href="#Ed2k"
-                                    role="tab" aria-controls="Ed2k" aria-selected="false" onclick="
-        commontab();">Ed2k</a>
-                                <a class="nav-link card px-0 col-12" id="Magnet-tab" data-toggle="pill" href="#Magnet"
-                                    role="tab" aria-controls="Magnet" aria-selected="false" onclick="
-        commontab();">Magnet</a>
+                                    role="tab" aria-controls="Ed2k" aria-selected="false"
+                                    onclick="commontab();">Ed2k</a>
+                                <a class="nav-link card px-0 col-12" id="Pan-tab" data-toggle="pill" href="#Pan"
+                                    role="tab" aria-controls="Pan" aria-selected="true" onclick="commontab();">Pan</a>
 
                                 <a class="nav-link card px-0 mt-5 col-12" id="Task-tab" data-toggle="pill" href="#Task"
-                                    role="tab" aria-controls="Task" aria-selected="false" onclick="
-        recheck_button_invisible();">Task</a>
+                                    role="tab" aria-controls="Task" aria-selected="false"
+                                    onclick="recheck_button_invisible();">Task</a>
                             </div>
                         </div>
                         <div id="top-field">
@@ -617,6 +524,20 @@
                     </div>
                     <div id="result_content">
                         <div class="tab-content card" id="tabContent">
+
+                            <div class="tab-pane fade" id="HQR" role="tabpanel" aria-labelledby="HQR-tab">
+                                <ul class="list-group" id="HQR_table">
+
+                                    <div class="jumbotron" id="HQR_jumbotron">
+                                        <h1 class="display-4">emmmmm</h1>
+                                        <p class="lead">你貌似没有提交关键字，本挖掘机不知道你想要啥</p>
+                                        <hr class="my-4">
+                                        <p>要不去首页搜一下？</p>
+                                        <a class="btn btn-primary btn-lg" href="#" role="button">回首页</a>
+                                    </div>
+                                </ul>
+                            </div>
+
                             <div class="tab-pane fade active show" id="Pan" role="tabpanel" aria-labelledby="Pan-tab">
                                 <ul class="list-group" id="Pan_table">
                                     <div class="jumbotron" id="Pan_jumbotron">
@@ -628,6 +549,7 @@
                                     </div>
                                 </ul>
                             </div>
+
                             <div class="tab-pane fade" id="Thunder" role="tabpanel" aria-labelledby="Thunder-tab">
                                 <ul class="list-group" id="Thunder_table">
                                     <div class="jumbotron" id="Thunder_jumbotron">
@@ -639,6 +561,7 @@
                                     </div>
                                 </ul>
                             </div>
+
                             <div class="tab-pane fade" id="Ed2k" role="tabpanel" aria-labelledby="Ed2k-tab">
                                 <ul class="list-group" id="Ed2k_table">
 
@@ -651,6 +574,7 @@
                                     </div>
                                 </ul>
                             </div>
+
                             <div class="tab-pane fade" id="Magnet" role="tabpanel" aria-labelledby="Magnet-tab">
                                 <ul class="list-group" id="Magnet_table">
 
@@ -663,6 +587,7 @@
                                     </div>
                                 </ul>
                             </div>
+                            
                             <div class="tab-pane fade" id="Task" role="tabpanel" aria-labelledby="Task-tab">
                                 <ul class="list-group" id="Task_table">
 
@@ -686,36 +611,6 @@
                 </div>
                 <div id="commit_board_lg" class="">
                     <ul id="commit_list_lg" style="    overflow-y: auto;height: 30vh;" class="card-body">
-                        <li class="news-item">
-                            <table class="card news-item-sub">
-                                <tbody>
-                                    <tr class="commit_area row">
-                                        <td class="col-6 commit_title">ssssssssssssssssssssssssssss</td>
-                                        <td class="col-6">2019/03/02</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </li>
-                        <li class="news-item">
-                            <table class="card news-item-sub">
-                                <tbody>
-                                    <tr class="commit_area row">
-                                        <td class="col-6 commit_title">ssssssssssssssssssssssssssss</td>
-                                        <td class="col-6">2019/03/02</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </li>
-                        <li class="news-item">
-                            <table class="card news-item-sub">
-                                <tbody>
-                                    <tr class="commit_area row">
-                                        <td class="col-6 commit_title">ssssssssssssssssssssssssssss</td>
-                                        <td class="col-6">2019/03/02</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </li>
                         <li class="news-item">
                             <table class="card news-item-sub">
                                 <tbody>
