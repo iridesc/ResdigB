@@ -561,12 +561,14 @@ function cheekkey(keyword) {
                     res.sound_score = 1
                     tags.push({ color: 'info', name: 'DTS-HD' })
                 } else if(res.filename.indexOf('DTS') > -1) {
-                    res.sound_score = 0.8
+                    res.sound_score = 0.7
                     tags.push({ color: 'info', name: 'DTS' })
                 }else if(res.filename.indexOf('DD5.1') > -1) {
-                    res.sound_score = 0.8
+                    res.sound_score = 0.5
                     tags.push({ color: 'info', name: 'Dolby' })
-                }else{
+                }
+                else
+                {
                     res.sound_score = 0
                 }
 
@@ -670,7 +672,7 @@ function reslinemaker(res) {
     }
 
     function GetResBuffHtml(res) {
-        let buff_html = ""
+        let buff_html = "<br>"
         res.tags.forEach(tag => {
             buff_html += '<span class=\"mx-auto badge badge-pill badge-' + tag.color + '\">' + tag.name + "</span>"
         });
