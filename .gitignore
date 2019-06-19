@@ -1,4 +1,4 @@
+*.py[cod]
 db.sqlite3
 Encryption/*js
 conf/setting.json
-*.pyc
