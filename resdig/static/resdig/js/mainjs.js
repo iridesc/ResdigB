@@ -530,17 +530,17 @@ function cheekkey(keyword) {
 
             if (res.filename != null) {
                 //  picture quality
-                if (res.filename.indexOf('1080') > -1) {
+                if (res.filename.indexOf('1080p') > -1 || res.filename.indexOf('BD1920') > -1) {
 
                     res.pic_score = 0.8
                     tags.push({ color: 'primary', name: '1080p' })
 
-                } else if (res.filename.indexOf('720') > -1) {
+                } else if (res.filename.indexOf('720p') > -1 || res.filename.indexOf('BD1280') > -1) {
 
                     res.pic_score = 0.6
                     tags.push({ color: 'success', name: '720p' })
 
-                } else if (res.filename.indexOf('1280') > -1) {
+                } else if (res.filename.indexOf('480p') > -1) {
                     res.pic_score = 0.4
                     tags.push({ color: 'secondary', name: 'HD1280' })
                 } else {
@@ -557,11 +557,15 @@ function cheekkey(keyword) {
                 }
 
                 // sounds quality
-                if (res.filename.indexOf('DTS') > -1) {
+                if (res.filename.indexOf('DTS-HD') > -1) {
                     res.sound_score = 1
+                    tags.push({ color: 'info', name: 'DTS-HD' })
+                } else if(res.filename.indexOf('DTS') > -1) {
+                    res.sound_score = 0.8
                     tags.push({ color: 'info', name: 'DTS' })
-                } else {
-                    res.sound_score = 0
+                }else if(res.filename.indexOf('DD5.1') > -1) {
+                    res.sound_score = 0.8
+                    tags.push({ color: 'info', name: 'Dolby' })
                 }
 
             } else {
