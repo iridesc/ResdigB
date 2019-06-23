@@ -51,8 +51,8 @@ function bind() {
     $('#searchinput_button').click(function () {
         $('#tab .nav-link').siblings().removeClass("active show");
         $('#tabContent .tab-pane').siblings().removeClass("active show");
-        $('#Pan-tab').addClass("active show");
-        $('#Pan').addClass("active show");
+        $('#HQR-tab').addClass("active show");
+        $('#HQR').addClass("active show");
         //submit();
         var keyword = $("#searchinput_input").val();
         cheekkey(keyword);
