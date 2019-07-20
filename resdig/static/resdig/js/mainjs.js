@@ -2,15 +2,15 @@ let iscollapsed = true;
 let timer;
 var cookieexisted = true;
 var shown = false;
-const x = 'q863cq';
-const y = 'fiwy';
-const z = 'ug72jc';
+const KEY='q863cqfiwyug72jc'
+const IV='1234567812345678'
 var continued = false;
 var tempe;
-var aesEcb = new aesjs.ModeOfOperation.ecb(aesjs.utils.utf8.toBytes(x + y + z));
-
 
 $(document).ready(function init() {
+    a="."
+    // console.log( getAesString(a))
+
     $.cookie('resboxkey', '', { expires: -1 });
     animateinit();
     bind();
@@ -21,12 +21,15 @@ $(document).ready(function init() {
 
     bindapi();
 
-
     /*$(function () {
         $('.server_status_text').popover()
     });*/
 
 });
+
+
+
+
 function loadingstart() {
     if (continued) {
         animateCSS('#main_body', 'slideOutDown', '', function () {
@@ -124,7 +127,7 @@ function submit() {
 function recheck_button_visible() {
     $('#recheckbutton').css('visibility', 'visible');
 }
-function recheck_button_invisible() {
+function recheck_button_invisible() {   
     $('#recheckbutton').css('visibility', 'hidden');
 }
 function historyanimationout() {
@@ -269,66 +272,37 @@ function initcopy() {
     });
 }
 /////////////////////////////下为接口///////////////////////////////////////
-function encrypt(word) {
-    //添加空格
-    var newword = '';
-    for (var i = 0; i < word.length; i++) {
-        if (word[i] == ':' && word[i - 1] == '"') {
-            newword = newword + word[i] + ' '
-        } else {
-            newword = newword + word[i]
-        }
-    }
-    var textBytes = Array.from(aesjs.utils.utf8.toBytes(newword));
-    //补齐
-    while (textBytes.length % 16 != 0) {
-        textBytes.push(32);
-    }
-    var encryptedBytes = aesEcb.encrypt(textBytes);
-    return aesjs.utils.hex.fromBytes(encryptedBytes);//encryptedhex
+
+function getAesString(data){
+    // console.log(data);
+    
+    var key  = CryptoJS.enc.Utf8.parse(KEY);
+    var iv   = CryptoJS.enc.Utf8.parse(IV);
+    var encrypted =CryptoJS.AES.encrypt(data,key,{
+        iv:iv,
+        mode:CryptoJS.mode.CBC,
+        padding:CryptoJS.pad.Pkcs7
+    });
+    return encrypted.toString()//返回的是base64格式的密文
 }
-function decrypt(sstring) {
-    function Str2Bytes(str) {
-
-        var pos = 0;
-
-        var len = str.length;
-
-        if (len % 2 != 0) {
-
-            return null;
-
-        }
-
-        len /= 2;
-
-        var hexA = new Array();
-
-        for (var i = 0; i < len; i++) {
-
-            var s = str.substr(pos, 2);
-
-            var v = parseInt(s, 16);
-
-            hexA.push(v);
-
-            pos += 2;
-
-        }
-
-        return hexA;
-    }
-    var bytestring = Str2Bytes(sstring);
-    var decryptBytes = aesEcb.decrypt(bytestring);
-
-    return aesjs.utils.utf8.fromBytes(decryptBytes)//decryptedutf8
+function getDAesString(encrypted){
+    var key  = CryptoJS.enc.Utf8.parse(KEY);
+    var iv   = CryptoJS.enc.Utf8.parse(IV);
+    var decrypted =CryptoJS.AES.decrypt(encrypted,key,{
+        iv:iv,
+        mode:CryptoJS.mode.CBC,
+        padding:CryptoJS.pad.Pkcs7
+    });
+    return decrypted.toString(CryptoJS.enc.Utf8);
 }
+
+
 function getElist() {
     var data = { reason: "getElist" };
     data = JSON.stringify(data);
-    data = encrypt(data);
+    data = getAesString(data);
     $.post("/resdig/api/", data, function (data, status) {
-        data = decrypt(data);
+        data = getDAesString(data);
         data = JSON.parse(data);
         var Elist = data.Elist;
         var enginebuttonstr = "";
@@ -396,9 +370,10 @@ function getElist() {
 function gettasklist() {
     var data = { reason: "gettasklist" };
     data = JSON.stringify(data);
-    data = encrypt(data);
+    data = getAesString(data);
     $.post("/resdig/api/", data, function (data, status) {
-        data = decrypt(data);
+        data = getDAesString(data);
+        // console.log('>',data,'<')
         data = JSON.parse(data);
         var tasklist = data.tasklist;
         test(tasklist);
@@ -441,9 +416,9 @@ function gettasklist() {
 function getmessage() {
     var data = { reason: "getmessage", limit: 30 };
     data = JSON.stringify(data);
-    data = encrypt(data);
+    data = getAesString(data);
     $.post('/resdig/api/', data, function (data, textStatus) {
-        data = decrypt(data);
+        data = getDAesString(data);
         data = JSON.parse(data);
         var tbodystr = '';
         var messagelist = data.messagelist;
@@ -465,18 +440,18 @@ function getmessage() {
 
 }
 function getRKamount() {
-    data = encrypt(JSON.stringify({ reason: 'getamount' }));
+    data = getAesString(JSON.stringify({ reason: 'getamount' }));
     $.post("/resdig/api/", data, function (data, status) {
-        data = decrypt(data);
+        data = getDAesString(data);
         data = JSON.parse(data);
         $("#resamount").text('资源储量: ' + Math.round(data.resamount / 1000) / 10 + 'W+');
         //$("#keywordamount").text(data.keyamount);
     });
 }
 function getdonateinfo() {
-    var data = encrypt(JSON.stringify({ reason: 'getdonateinfo' }));
+    var data = getAesString(JSON.stringify({ reason: 'getdonateinfo' }));
     $.post('/resdig/api/', data, function (data, status) {
-        data = decrypt(data);
+        data = getDAesString(data);
         data = JSON.parse(data);
         var donatelist = data.donatelist;
         test(donatelist);
@@ -560,15 +535,14 @@ function cheekkey(keyword) {
                 if (res.filename.indexOf('DTS-HD') > -1) {
                     res.sound_score = 1
                     tags.push({ color: 'info', name: 'DTS-HD' })
-                } else if(res.filename.indexOf('DTS') > -1) {
+                } else if (res.filename.indexOf('DTS') > -1) {
                     res.sound_score = 0.7
                     tags.push({ color: 'info', name: 'DTS' })
-                }else if(res.filename.indexOf('DD5.1') > -1) {
+                } else if (res.filename.indexOf('DD5.1') > -1) {
                     res.sound_score = 0.5
                     tags.push({ color: 'info', name: 'Dolby' })
                 }
-                else
-                {
+                else {
                     res.sound_score = 0
                 }
 
@@ -615,13 +589,13 @@ function cheekkey(keyword) {
             $.cookie('mydiglist', JSON.stringify(mydiglist), { expires: 30 });
         }
         var data = JSON.stringify({ reason: "cheekkey", keyword: keyword });
-        data = encrypt(data);
+        data = getAesString(data);
         //$('#alert_area').html(alert("请稍等...","正在呼叫挖机调度中心！！！","alert-warning"));
         loadingstart();///
         continued = true;
         $.post("/resdig/api/", data, function (data, status) {
             test(status);
-            data = decrypt(data);
+            data = getDAesString(data);
             data = JSON.parse(data);
             test(data.statu);
             test(data);
@@ -676,7 +650,7 @@ function reslinemaker(res) {
         res.tags.forEach(tag => {
             buff_html += '<span class=\"mx-auto badge badge-pill badge-' + tag.color + '\">' + tag.name + "</span>"
         });
-        buff_html+='</div>'
+        buff_html += '</div>'
         return buff_html
 
     }
@@ -690,7 +664,7 @@ function reslinemaker(res) {
         "<a class=\"text-center my-auto\">" + getfilename(res) + "</a>" +
         GetResBuffHtml(res) +
         "</div>" +
-    
+
 
         "<div class=\"col-3 col-sm-2 col-lg-1 operation d-flex justify-content-sm-between\">" +
         "<a class=\"url mx-0\" href=\"" + res.web + "\">" +
@@ -720,34 +694,34 @@ function reslistmaker(reslist) {
     baiduamount = 0;
 
     // HQR
-    
+
 
     for (var i = 0; i < reslist.length; i++) {
         var res = reslist[i];
-        
+
         if (i < 50) {
-            hqrtbodystr+=reslinemaker(res)
-            hqramount+=1
-        } 
-        
+            hqrtbodystr += reslinemaker(res)
+            hqramount += 1
+        }
+
         if (res.type == 'thunder') {
             thunderamount = thunderamount + 1;
 
             thundertbodystr = thundertbodystr + reslinemaker(res)
         }
-        
+
         if (res.type == 'magnet') {
             magnetamount = magnetamount + 1;
 
             magnettbodystr = magnettbodystr + reslinemaker(res)
         }
-        
+
         if (res.type == 'ed2k') {
             ed2kamount = ed2kamount + 1;
 
             ed2ktbodystr = ed2ktbodystr + reslinemaker(res)
         }
-        
+
         if (res.type == 'baidu') {
             baiduamount = baiduamount + 1;
             baidutbodystr = baidutbodystr + reslinemaker(res)
@@ -884,7 +858,7 @@ function bindapi() {
                 message:feedbackmessage
             };
             data=JSON.stringify(data);
-            data=encrypt(data);
+            data=getAesString(data);
             $('#feedbackhelppop div:eq(0)').html("<h1>请稍等...</h1>");
             $('#feedbackhelppop div:eq(1)').html("<h1>正在呼叫挖机调度中心！！！</h1>" +
                 "<img src=\"/static/resdig/loading.gif\" width=\"90%\" height=\"90%\">\n" );
@@ -923,7 +897,7 @@ function bindapi() {
                 message: commentsmessage,
             };
             data = JSON.stringify(data);
-            data = encrypt(data);
+            data = getAesString(data);
             $('#alert_area').html(alert_html("请稍等...", "正在呼叫挖机调度中心！！！", "alert-warning"));
             $.post('/resdig/api/', data, function (data, status) {
                 test("status" + status);
@@ -948,7 +922,7 @@ function bindapi() {
                 message: commentsmessage,
             };
             data = JSON.stringify(data);
-            data = encrypt(data);
+            data = getAesString(data);
             $('#alert_area').html(alert("请稍等...", "正在呼叫挖机调度中心！！！", "alert-warning"));
             $.post('/resdig/api/', data, function (data, status) {
                 test("status" + status);
@@ -1020,11 +994,11 @@ function refresh_method() {
         keyword: resboxkey,
     };
     data = JSON.stringify(data);
-    data = encrypt(data);
+    data = getAesString(data);
     $.post('/resdig/api/', data, function (data, status) {
         spinner.spin();
         if (status == 'success') {
-            data = decrypt(data);
+            data = getDAesString(data);
             data = JSON.parse(data);
             if (data.statu == 'digging') {
                 test("digging");

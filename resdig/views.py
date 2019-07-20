@@ -1,6 +1,8 @@
 ﻿from multiprocessing.managers import BaseManager
 from  django.shortcuts import render
 from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad, unpad
+import base64
 from .models import Resourcetable,Etable,Keywordtable,Errotable,Feedbacktable,Messagetable,Appversiontable
 from django.http import HttpResponse,JsonResponse,HttpResponseNotAllowed,HttpResponseBadRequest
 import json,time,re,sys,os,random
@@ -16,26 +18,37 @@ from django.core.mail import send_mail
 #No such api                 1004
 #unknow erro                 2222
 
+BLOCKSIZE=16
+PADSTYLE='pkcs7'
 
+def GetMode():
+    KEY=b'q863cqfiwyug72jc'
+    VI=b'1234567812345678'
+    MODE=AES.MODE_CBC
+    return AES.new(KEY,MODE,VI)
+    
+def Encrypto(r_data_str):
+    obj=GetMode()
 
+    # print(data)
+    r_data_bytes=bytes(r_data_str,'utf-8')
+    #补齐字节
+    r_data_paded_bytes= pad(r_data_bytes,BLOCKSIZE,PADSTYLE)
+    #加密
+    e_data_bytes = obj.encrypt(r_data_paded_bytes)#.hex()
+    e_data_str=str(base64.b64encode(e_data_bytes),encoding='utf-8',errors="ignore")
+    # print(e_data_str)
+    return e_data_str
 
-class cstring(bytes):
-    key=b'q863cqfiwyug72jc'
-    mode=AES.new(key,AES.MODE_ECB)
-
-    def encrypto(self):
-        #补齐字节
-        s=self
-        while len(s) % 16 != 0:
-            s = s + b' '
-        #加密
-        return self.mode.encrypt(s).hex()
-
-    def decrypto(self):
-        selfbytes=bytes().fromhex(str(self, 'utf-8'))
-        b=self.mode.decrypt(selfbytes)
-        return str(b,encoding='utf-8',errors="ignore")
-
+def Decrypto(e_data_str):
+    obj=GetMode()
+    
+    e_data_bytes= base64.b64decode(e_data_str)
+    r_data_paded_bytes=obj.decrypt(e_data_bytes)
+    r_data_bytes=unpad(r_data_paded_bytes,BLOCKSIZE,PADSTYLE)
+    r_data_str=str(r_data_bytes,encoding='utf-8',errors="ignore")
+    print(r_data_str)
+    return r_data_str
 
 def xxsclear(s):
     s=s.replace('&', '&amp;')
@@ -51,6 +64,11 @@ def home(request):
 def api(request):
     if request.method == 'POST':
         try:
+            e_data_str=str(request.body,encoding='utf-8',errors="ignore")
+    
+            r_data_str=Decrypto(e_data_str)
+            postdata = json.loads(r_data_str)
+            reason=postdata['reason']
             class cachemanager(BaseManager):
                 pass
 
@@ -58,11 +76,6 @@ def api(request):
             m = cachemanager(address=('127.0.0.1', 23333), authkey=b'iridescent256938004')
             m.connect()
             cache = m.cacheobj()
-
-            postdata=json.loads(cstring(request.body).decrypto())
-            reason=postdata['reason']
-
-
 
             if reason=='getElist':
                 data = {
@@ -249,15 +262,18 @@ def api(request):
                        'data':'No such api',
                       'code':1004
                       }
-
-            data = cstring(bytes(json.dumps(data), 'utf-8')).encrypto()
+            
+            data = Encrypto(json.dumps(data))
             return HttpResponse(data)
 
         except Exception as E:
             print('Erro:\napi exception',str(E))
             try:
                 print('try reading....')
-                print(json.loads(cstring(request.body).decrypto()))
+                e_data_str=str(request.body,encoding='utf-8',errors="ignore")
+                print(e_data_str)
+                r_data_str=Decrypto(e_data_str)
+                print(r_data_str)
             except Exception as e:
                 print('Reading erro:',str(e))
                 print(request.body)
@@ -267,7 +283,10 @@ def api(request):
         print('Erro:\nwrong method!')
         try:
             print('try reading....')
-            print(json.loads(cstring(request.body).decrypto()))
+            e_data_str=str(request.body,encoding='utf-8',errors="ignore")
+            print(e_data_str)
+            r_data_str=Decrypto(e_data_str)
+            print(r_data_str)
         except Exception as e:
             print('Reading erro:', str(e))
             print(request.body)

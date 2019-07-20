@@ -18,7 +18,7 @@
     <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdn.bootcss.com/popper.js/1.15.0/umd/popper.min.js"></script>
     <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <script src="https://cdn.bootcss.com/aes-js/3.1.2/index.min.js"></script>
+ 
     <script src="https://cdn.bootcss.com/spin.js/2.3.2/spin.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min.js"></script>
     <script src="https://cdn.bootcss.com/clipboard.js/2.0.4/clipboard.min.js"></script>
@@ -42,10 +42,11 @@
     </script>
 
 
-    <script src="{% static '/resdig/js/core.js' %}"></script>
+    <!-- <script src="{% static '/resdig/js/core.js' %}"></script> -->
 
-
-
+    <script src="{% static '/resdig/js/aes.js' %}"></script>
+    <script src="{% static '/resdig/js/marquee.js' %}"></script>
+    <script src="{% static '/resdig/js/mainjs.js' %}"></script>
 
 </head>
 
@@ -435,13 +436,13 @@
         <div id="middlepart" class="col-10 px-0 col-sm-8 mx-auto">
             <div id="searchview" class="col-lg-6 mt-0  mx-auto flex-column">
                 <div id="searchview_sub" class="">
-                    
-                    <h1 class=" dispaly-1  text-center text-info "  > Resdig</h1>
-                        <!-- <div id="wordslogo" class="" style="max-height: 250px; max-width:250px;">
+
+                    <h1 class=" dispaly-1  text-center text-info "> Resdig</h1>
+                    <!-- <div id="wordslogo" class="" style="max-height: 250px; max-width:250px;">
                             <img src="https://raw.githubusercontent.com/iridesc/ocolabstatic/master/resdig/img/mainpagelogo.png"
                                 id="wordslogo_pic" class="col">
                         </div> -->
-                    
+
                     <br>
                     <br>
                     <div id="searchinput" class="input-group ">
@@ -482,12 +483,12 @@
                                 <img class="d-sm-none card w-100 px-2 disabled  btn-go"
                                     src="https://raw.githubusercontent.com/iridesc/ocolabstatic/master/resdig/img/filter.png">
 
-                                <a class="nav-link card px-0 col-12 " id="HQR-tab" data-toggle="pill"
-                                    href="#HQR" role="tab" aria-controls="HQR" aria-selected="false"
+                                <a class="nav-link card px-0 col-12 " id="HQR-tab" data-toggle="pill" href="#HQR"
+                                    role="tab" aria-controls="HQR" aria-selected="false"
                                     onclick="commontab();">HQR-50</a>
 
-                                <a class="nav-link card px-0 col-12 " id="Magnet-tab" data-toggle="pill"
-                                    href="#Magnet" role="tab" aria-controls="Magnet" aria-selected="false"
+                                <a class="nav-link card px-0 col-12 " id="Magnet-tab" data-toggle="pill" href="#Magnet"
+                                    role="tab" aria-controls="Magnet" aria-selected="false"
                                     onclick="commontab();">Magnet</a>
 
                                 <a class="nav-link card px-0 col-12" id="Thunder-tab" data-toggle="pill" href="#Thunder"

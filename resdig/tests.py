@@ -1,37 +1,44 @@
-from django.test import TestCase
+
 from Crypto.Cipher import AES
-import requests,json
-# Create your tests here.
+from Crypto.Util.Padding import pad, unpad
+import json
+import base64
+
+BLOCKSIZE=16
+PADSTYLE='pkcs7'
+def GetMode():
+    KEY=b'q863cqfiwyug72jc'
+    IV=b'1234567812345678'
+    MODE=AES.MODE_CBC
+    return AES.new(KEY,MODE,IV)
+    
+def Encrypto(r_data_str):
+    obj=GetMode()
+
+    # print(data)
+    r_data_bytes=bytes(r_data_str,'utf-8')
+    #补齐字节
+    r_data_paded_bytes= pad(r_data_bytes,BLOCKSIZE,PADSTYLE)
+    #加密
+    e_data_bytes = obj.encrypt(r_data_paded_bytes)#.hex()
+    e_data_str=str(base64.b64encode(e_data_bytes),encoding='utf-8',errors="ignore")
+    print(e_data_str)
+    return e_data_str
 
 
-class cstring(bytes):
-    key=b'q863cqfiwyug72jc'
-    mode=AES.new(key,AES.MODE_ECB)
-
-    def encrypto(self):
-        #补齐字节
-        s=self
-        while len(s) % 16 != 0:
-            s = s + b' '
-        #加密
-        return self.mode.encrypt(s).hex()
-
-    def decrypto(self):
-
-        selfbytes=bytes().fromhex(str(self, 'utf-8'))
-        b=self.mode.decrypt(selfbytes)
-        return str(b,encoding='utf-8',errors="ignore")
+def Decrypto(e_data_str):
+    obj=GetMode()
+    
+    e_data_bytes= base64.b64decode(e_data_str)
+    # print('e_data_bytes------------',e_data_bytes)
+    r_data_paded_bytes=obj.decrypt(e_data_bytes)
+    r_data_bytes=unpad(r_data_paded_bytes,BLOCKSIZE,PADSTYLE)
+    # print('data_bytes------------',r_data_bytes)
+    r_data_str=str(r_data_bytes,encoding='utf-8',errors="ignore")
+    print('>',r_data_str,'<')
+    return r_data_str
+   
 
 
-
-url='https://www.resdig.cn/api'
-data={
-    'reason':'getElist'
-}
-data = cstring(bytes(json.dumps(data), 'utf-8')).encrypto()
-#data=cstring(data).decrypto()
-print(data)
-r=requests.post(url,data)
-print(r.status_code)
-print(r.text)
-print('---------------------------------')
+a="."
+Decrypto( Encrypto(a) )
