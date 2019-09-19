@@ -1,11 +1,12 @@
-www.resdig.cn/static, resdig.cn/static {
-	gzip
-	root /root/ocolab/static/
+www.resdig.cn, resdig.cn {
+        gzip
+        root /root/ocolab/
+        proxy / localhost:8000 {
+                transparent
+        }
 }
-www.resdig.cn, resdig.cn {                       
-	gzip
-	root /root/ocolab/
-	proxy / localhost:8000 {
-        	transparent
-	}
-}     
+www.resdig.cn/static, resdig.cn/static {
+        gzip
+        root /root/ocolab/static/
+}
+

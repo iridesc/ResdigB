@@ -19,7 +19,7 @@ echo 'done.'
 
 echo 'starting gunicorn...'
 cd ..
-nohup gunicorn -b "127.0.0.1:8000" writeval.wsgi &
+nohup gunicorn -b "127.0.0.1:8000" ocolab.wsgi &
 echo 'done.'
 
 echo 'starting manager-x...'

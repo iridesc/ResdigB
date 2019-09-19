@@ -1,0 +1,16 @@
+#!/bin/bash
+echo '---------------------------------------'
+
+echo 'kill manager-x...'
+killall manager-x.py
+echo 'done.'
+
+echo 'kill gunicorn...'
+killall gunicorn
+echo 'done.'
+
+echo 'kill caddy...'
+killall caddy
+echo 'done.'
+
+echo '---------------------------------------'
