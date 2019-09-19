@@ -3,7 +3,5 @@
 Encryption/*js
 conf/setting.json
 static/*
-manager-x.log
 nohup.out
 manager-x.log
-resdig/templates/resdig_home.html
