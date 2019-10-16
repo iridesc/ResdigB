@@ -35,20 +35,20 @@ class Etable(models.Model):
 
     provider=models.CharField(default='',max_length=20)
 
-    cpu=models.CharField(max_length=20,default='')
-    cpufrom=models.CharField(max_length=20,default='')
+    # cpu=models.CharField(max_length=20,default='')
+    # cpufrom=models.CharField(max_length=20,default='')
 
-    memory=models.CharField(max_length=20,default='')
-    memoryfrom=models.CharField(max_length=20,default='')
+    # memory=models.CharField(max_length=20,default='')
+    # memoryfrom=models.CharField(max_length=20,default='')
 
-    storage = models.CharField(max_length=20, default='')
-    storagefrom = models.CharField(max_length=20, default='')
+    # storage = models.CharField(max_length=20, default='')
+    # storagefrom = models.CharField(max_length=20, default='')
 
-    power=models.CharField(max_length=20,default='')
-    powerfrom=models.CharField(max_length=20,default='')
+    # power=models.CharField(max_length=20,default='')
+    # powerfrom=models.CharField(max_length=20,default='')
 
-    motherboard=models.CharField(max_length=20,default='')
-    motherboardfrom=models.CharField(max_length=20,default='')
+    # motherboard=models.CharField(max_length=20,default='')
+    # motherboardfrom=models.CharField(max_length=20,default='')
 
 
 
@@ -64,21 +64,21 @@ class Messagetable(models.Model):
     messagefrom=models.CharField(max_length=20,default='unknow')
     message=models.CharField(max_length=200)
 
-class Errotable(models.Model):
-    errotype = models.CharField(db_index=True,max_length=20)
-    errotime = models.FloatField(primary_key=True)
-    message = models.CharField(max_length=2000)
-    sendmail = models.BooleanField(default=False)
-    def send(self,emaliset):
-        try:
-            statu=send_mail(self.errotype,self.message,settings.DEFAULT_FROM_EMAIL, emaliset,)
-            if statu:
-                self.sendmail=True
-                self.save()
-            else:
-                print('send mail erro!!')
-        except:
-            print('send mail erro!!')
+# class Errotable(models.Model):
+#     errotype = models.CharField(db_index=True,max_length=20)
+#     errotime = models.FloatField(primary_key=True)
+#     message = models.CharField(max_length=2000)
+#     sendmail = models.BooleanField(default=False)
+#     def send(self,emaliset):
+#         try:
+#             statu=send_mail(self.errotype,self.message,settings.DEFAULT_FROM_EMAIL, emaliset,)
+#             if statu:
+#                 self.sendmail=True
+#                 self.save()
+#             else:
+#                 print('send mail erro!!')
+#         except:
+#             print('send mail erro!!')
 
 class Appversiontable(models.Model):
     versioncode=models.IntegerField(default=0)

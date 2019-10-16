@@ -3,7 +3,7 @@ from  django.shortcuts import render
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad, unpad
 import base64
-from .models import Resourcetable,Etable,Keywordtable,Errotable,Feedbacktable,Messagetable,Appversiontable
+from .models import Resourcetable,Etable,Keywordtable,Feedbacktable,Messagetable,Appversiontable
 from django.http import HttpResponse,JsonResponse,HttpResponseNotAllowed,HttpResponseBadRequest
 import json,time,re,sys,os,random
 from django.conf import settings
