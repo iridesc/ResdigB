@@ -1,3 +1,12 @@
+from resdig.models import Resourcetable
+from resdig.models import Etable
+from resdig.models import Keywordtable
+from resdig.models import Messagetable
+from resdig.models import Appversiontable
+from resdig.models import Broadcasttable
+from resdig.models import Donatetable
+from multiprocessing.managers import BaseManager
+from multiprocessing import Queue
 import requests
 import base64
 import json
@@ -11,15 +20,6 @@ sys.path.insert(0, pathname)
 sys.path.insert(0, os.path.abspath(os.path.join(pathname, '..')))
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ocolab.settings")
 django.setup()
-from multiprocessing import Queue
-from multiprocessing.managers import BaseManager
-from resdig.models import Donatetable
-from resdig.models import Broadcasttable
-from resdig.models import Appversiontable
-from resdig.models import Messagetable
-from resdig.models import Keywordtable
-from resdig.models import Etable
-from resdig.models import Resourcetable
 
 host = '0.0.0.0'
 port = 23333
@@ -96,7 +96,7 @@ class Task:
                     page=page
                 )
             )
-        self.last_active_time=time.time()
+        self.last_active_time = time.time()
         makelog('Task inited {}'.format(self.keyword))
 
     def getdict(self):
@@ -272,13 +272,12 @@ class SubTask:
             makelog('Error unknow task{}'.format(self.task_type))
 
 
-
-
 def makelog(log):
     print(
         time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) +
-        '>>>',log
+        '>>>', log
     )
+
 
 class Engine:
     def __init__(self, enginetableobj):
@@ -287,16 +286,6 @@ class Engine:
         self.Model = enginetableobj.Model
         self.engineposition = enginetableobj.engineposition
         self.provider = enginetableobj.provider
-        self.cpu = enginetableobj.cpu
-        self.cpufrom = enginetableobj.cpufrom
-        self.memory = enginetableobj.memory
-        self.memoryfrom = enginetableobj.memoryfrom
-        self.storage = enginetableobj.storage
-        self.storagefrom = enginetableobj.storagefrom
-        self.power = enginetableobj.power
-        self.powerfrom = enginetableobj.powerfrom
-        self.motherboard = enginetableobj.motherboard
-        self.motherboarefrom = enginetableobj.motherboardfrom
         self.acttime = 0
 
     def is_active(self):
@@ -312,16 +301,16 @@ class Engine:
             'Model': self.Model,
             'engineposition': self.engineposition,
             'provider': self.provider,
-            'cpu': self.cpu,
-            'cpufrom': self.cpufrom,
-            'memory': self.memory,
-            'memoryfrom': self.memoryfrom,
-            'storage': self.storage,
-            'storagefrom': self.storagefrom,
-            'power': self.power,
-            'powerfrom': self.powerfrom,
-            'motherboard': self.motherboard,
-            'motherboardfrom': self.motherboarefrom,
+            'cpu': '',
+            'cpufrom': '',
+            'memory': '',
+            'memoryfrom': '',
+            'storage': '',
+            'storagefrom': '',
+            'power': '',
+            'powerfrom': '',
+            'motherboard': '',
+            'motherboardfrom': '',
             'is_active': self.is_active()
         }
 
@@ -356,7 +345,7 @@ class cache:
     def subtaskqueue_puts(self, keyword, subtask_list):
         for task in self.tasklist:
             if task.keyword == keyword:
-                task.subtask_total_counter+=len(subtask_list)
+                task.subtask_total_counter += len(subtask_list)
         for subtak in subtask_list:
             self.subtaskqueue.put(subtak)
 
@@ -384,8 +373,6 @@ class cache:
     def getdonorinfo(self):
         return self.donorinfo
 
-
-    
     def gettasklist(self):
         return [task.getdict() for task in self.tasklist]
 
@@ -394,16 +381,14 @@ class cache:
         for task in self.tasklist:
             keywordlist.append(task.keyword)
         return keyword in keywordlist
-    
-    def rawres_upload(self,keyword,rawres_list):
+
+    def rawres_upload(self, keyword, rawres_list):
         for task in self.tasklist:
             if task.keyword == keyword:
                 # 更新 task 最后一次活跃时间
                 task.last_active_time = time.time()
                 task.putrawres(rawres_list)
-                break        
-
-
+                break
 
     # engine
 
@@ -441,7 +426,7 @@ class cache:
     def saveres(self):
         # makelog('Save Res:')
         for task in self.tasklist:
-            if task.statu == 'done' or (task.statu == 'digging' and time.time() - task.last_active_time >20):
+            if task.statu == 'done' or (task.statu == 'digging' and time.time() - task.last_active_time > 20):
                 # 除重
                 savereslist = []
                 prelinklist = [res.link for res in Resourcetable.objects.filter(
@@ -494,17 +479,12 @@ class reguler():
             F()
 
 
-
-
-
 def getcache():
     return cacheobj
 
 
 class cachemanager(BaseManager):
     pass
-
-
 
 
 if __name__ == '__main__':
@@ -534,5 +514,6 @@ if __name__ == '__main__':
                     CACHE.getenginelist()
                 time.sleep(1)
         except Exception as e:
-            makelog('Error in main process! Reboot after 2s !\n{}'.format(traceback.format_exc()))
+            makelog('Error in main process! Reboot after 2s !\n{}'.format(
+                traceback.format_exc()))
             time.sleep(2)
