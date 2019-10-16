@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Etable, Keywordtable, Errotable, Feedbacktable, Messagetable, Appversiontable, Broadcasttable, Donatetable, Resourcetable
+from .models import Etable, Keywordtable, Feedbacktable, Messagetable, Appversiontable, Broadcasttable, Donatetable, Resourcetable
 
 # Register your models here.
 @admin.register(Etable)
