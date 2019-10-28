@@ -5,3 +5,4 @@ conf/setting.json
 static/*
 nohup.out
 manager-x.log
+resdig/__pycache__/*
