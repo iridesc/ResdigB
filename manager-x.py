@@ -440,8 +440,9 @@ class cache:
             if task.statu == 'done' or (task.statu == 'digging' and time.time() - task.last_active_time >20):
                 # 除重
                 savereslist = []
-                prelinklist = [res.link for res in Resourcetable.objects.filter(
-                    keyword=task.keyword)]
+                prelinklist = [
+                    res.link for res in Resourcetable.objects.filter(keyword=task.keyword)
+                    ]
                 for res in task.reslist:
                     if res.link not in prelinklist:
                         savereslist.append(res)
