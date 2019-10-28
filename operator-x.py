@@ -99,7 +99,7 @@ for res in Ress:
     n+=1
     now = time.time()
     
-    if now - t > 0.01:
+    if now - t > 3:
         Resourcetable.objects.bulk_update(readylist, ('filename', 'filesize'))
         readylist=[]
         print(round(n*100/total,3),'% ',n,'/',total)
