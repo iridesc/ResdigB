@@ -20,11 +20,13 @@ from resdig.models import Messagetable
 from resdig.models import Keywordtable
 from resdig.models import Etable
 from resdig.models import Resourcetable
+from loger import makelog, setting
+setting(2)
 
 host = '0.0.0.0'
 port = 23333
 password = b'iridescent256938004'
-DEEPTH = 10
+DEEPTH = 400
 ENGINETIMEGAP = 15
 
 
@@ -85,23 +87,23 @@ class RawRes:
         except Exception as e:
             pass
 
+
 class Task:
     def __init__(self, keyword, subtaskqueue):
         self.keyword = keyword
-        self.statu = 'waiting'
+        self.statu = 'Initing'
         self.progress = 0
         self.subtask_done_counter = 0
         self.subtask_total_counter = 0
         self.reslist = []
-        for page in range(DEEPTH):
-            subtaskqueue.put(
+        subtaskqueue.put(
                 SubTask(
                     task_type='ParseTask',
                     keyword=keyword,
-                    page=page
+                    DEEPTH=DEEPTH,
                 )
             )
-        self.last_active_time=time.time()
+        self.last_active_time = time.time()
         makelog('Task inited {}'.format(self.keyword))
 
     def getdict(self):
@@ -129,27 +131,28 @@ class Task:
         self.subtask_done_counter += 1
         self.progress = self.subtask_done_counter*100/self.subtask_total_counter
         if self.subtask_done_counter == self.subtask_total_counter:
-            self.statu = 'done'
+            self.statu = 'Done'
         else:
-            self.statu = 'digging'
+            self.statu = 'Digging'
         for rawres in rawres_list:
             self.reslist.append(rawres_to_res(rawres))
-        # makelog('SubTask done! {}'.format(self.keyword))
+        makelog('SubTask done! {}'.format(self.keyword),4)
 
 
 class SubTask:
-    def __init__(self, task_type: str, keyword: str, page: int, weblink=None):
+    def __init__(self, task_type: str, keyword: str, weblink=None,DEEPTH=None):
         self.task_type = task_type
         self.keyword = keyword
-        self.page = page
-        if weblink == None and task_type == 'ParseTask':
-            self.link = 'http://www.baidu.com/s?'
+
+        if DEEPTH != None and task_type == 'ParseTask':
+            self.DEEPTH = DEEPTH
+        
         elif task_type == 'MiniTask':
             self.link = weblink
         else:
-            makelog('Task type error!')
+            makelog('Task type error!',1)
             raise
-        # makelog('SubTask inited:{}'.format(self.task_type))
+        makelog('SubTask inited:{}'.format(self.task_type),4)
 
     def do(self):
         @retry(tries=2)
@@ -161,22 +164,18 @@ class SubTask:
                 'User-Agent, Mozilla/5.0 (Macintosh; Intel Mac OS X 10.6; rv,2.0.1) Gecko/20100101 Firefox/4.0.1    ',
                 'User-Agent,Mozilla/5.0 (Windows NT 6.1; rv,2.0.1) Gecko/20100101 Firefox/4.0.1',
                 'User-Agent, Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_0) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.56 Safari/535.11',
-                'User-Agent, Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Maxthon 2.0)',
-                'User-Agent, Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; The World)',
-                'User-Agent, Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Trident/4.0; SE 2.X MetaSr 1.0; SE 2.X MetaSr 1.0; .NET CLR 2.0.50727; SE 2.X MetaSr 1.0)',
-                'User-Agent, Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; 360SE)',
             ]
 
-            head = {
-                'User-Agent': random.choice(UA)
-            }
             r = requests.get(
                 link,
-                headers=head,
+                headers={
+                    'User-Agent': random.choice(UA)
+                },
                 timeout=5,
                 params=params,
                 allow_redirects=allow_redirects
             )
+            # print(r.request.url)
             r.raise_for_status()
             return r
 
@@ -220,10 +219,10 @@ class SubTask:
                         if len(reslink) < 800:
                             raw_res = RawRes(
                                 self.keyword,
-                                    reslink,
-                                    self.link,
-                                    res_container[1]
-                                    )
+                                reslink,
+                                self.link,
+                                res_container[1]
+                            )
                             # 补全信息
                             raw_res.reslinkparser()
                             # 加入列表
@@ -231,35 +230,22 @@ class SubTask:
                                 raw_res
                             )
                 return rawres_list
-            # st=time.time()
+          
+
+            # print('---------------------------')
             sourcecode = get_source_code()
             rawres_list = get_rawres(sourcecode)
             # 找到任务并放入rawres
             CACHE.rawres_upload(self.keyword, rawres_list)
-            # now_time=time.time()
-            # makelog('MiniTask Done!  {} con_time:{} total_time:{}'.format(self.keyword,now_time-t,now_time-st,))
+            makelog('MiniTask Done!',4)
 
         def parsetask():
-            def get_tags():
-                params = {'wd': self.keyword+' 下载',
-                          'process_number': int(self.page) * 50, 'rn': 50}
+           
+            sengine = Bing(keyWord=self.keyword+' 下载', amount=self.DEEPTH)
+            makelog('search engine start',3)
+            results = sengine.Search()
+            self.weblinklist = [res['link'] for res in results] 
 
-                try:
-                    r = net(self.link, params=params)
-                    r.encoding = r.apparent_encoding
-                    tags = BeautifulSoup(r.text, 'html.parser').find_all(
-                        'h3', class_="t")
-                except:
-                    makelog(traceback.format_exc())
-                    tags = []
-
-                return tags
-
-            # 获取标签
-            tags = get_tags()
-            # 获取链接
-            self.weblinklist = [BeautifulSoup(
-                str(n), "html.parser").a['href'] for n in tags]
             # 上传SubTask
             CACHE.subtaskqueue_puts(
                 self.keyword,
@@ -267,29 +253,20 @@ class SubTask:
                     SubTask(
                         task_type='MiniTask',
                         keyword=self.keyword,
-                        page=self.page,
                         weblink=weblink
                     ) for weblink in self.weblinklist
                 ]
             )
 
-        # makelog('{} Start!'.format(self.task_type))
+        makelog('{} Start!'.format(self.task_type),3)
 
         if self.task_type == 'MiniTask':
             minitask()
         elif self.task_type == 'ParseTask':
             parsetask()
         else:
-            makelog('Error unknow task{}'.format(self.task_type))
+            makelog('Error unknow task{}'.format(self.task_type),1)
 
-
-
-
-def makelog(log):
-    print(
-        time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) +
-        '>>>',log
-    )
 
 class Engine:
     def __init__(self, enginetableobj):
@@ -332,7 +309,7 @@ class cache:
         self.deepth = deepth
         # 主任务
         self.tasklist = []
-        # 子任务
+        # 子任务队列
         self.subtaskqueue = Queue()
 
         self.enginelist = [Engine(E) for E in Etable.objects.all()]
@@ -357,7 +334,8 @@ class cache:
     def subtaskqueue_puts(self, keyword, subtask_list):
         for task in self.tasklist:
             if task.keyword == keyword:
-                task.subtask_total_counter+=len(subtask_list)
+                task.subtask_total_counter += len(subtask_list)
+                task.statu = 'Waiting'
         for subtak in subtask_list:
             self.subtaskqueue.put(subtak)
 
@@ -424,23 +402,36 @@ class cache:
             Messagetable.objects.order_by('-time')[0:200].values())
 
     def updatehotkeylist(self):
-        self.hotkeylist = list(
-            Keywordtable.objects.all().order_by('-hot')[0:50].values())
+        try:
+            self.hotkeylist = list(
+                Keywordtable.objects.all().order_by('-hot')[0:50].values())
+        except Exception as e:
+            makelog('Error in updatehotkeylist!\n'+str(e),1)
+
 
     def updateappversion(self):
-        self.appversion = Appversiontable.objects.order_by('-id').values()[0]
+        try:
+            self.appversion = Appversiontable.objects.order_by('-id').values()[0]
+        except Exception as e:
+            makelog('Error in updateappversion!\n'+str(e),1)
 
     def updatebroadcast(self):
-        self.broadcast = Broadcasttable.objects.order_by('-id').values()[0]
+        try:
+            self.broadcast = Broadcasttable.objects.order_by('-id').values()[0]
+        except Exception as e:
+            makelog('Error in updatebroadcast!\n' + str(e),1)
+        
 
     def updatedonnateinfo(self):
-        self.donorinfo = list(
-            Donatetable.objects.all().order_by('-donatetime').values())
-
+        try:
+            self.donorinfo = list(
+                Donatetable.objects.all().order_by('-donatetime').values())
+        except Exception as e:
+            makelog('Error in updatedonnateinfo!\n' + str(e),1)
+            
     def saveres(self):
-        # makelog('Save Res:')
         for task in self.tasklist:
-            if task.statu == 'done' or (task.statu == 'digging' and time.time() - task.last_active_time >20):
+            if task.statu == 'Done' or (task.statu == 'Digging' and time.time() - task.last_active_time >20):
                 # 除重
                 savereslist = []
                 prelinklist = [
@@ -509,7 +500,7 @@ class cachemanager(BaseManager):
 
 if __name__ == '__main__':
     while True:
-        makelog('Manager-x 2.0 start!')
+        makelog('Manager-x 2.0 start!',2)
         try:
             cacheobj = cache(deepth=DEEPTH, Egap=ENGINETIMEGAP)
             cachemanager.register('cacheobj', getcache)
@@ -523,16 +514,16 @@ if __name__ == '__main__':
                 reguler('updatedonnateinfo', 10 * 60),
                 reguler('updateappversion', 60 * 60),
                 reguler('updatehotkeylist', 3 * 60 * 60),
-                # reguler('updatebackground', 24 * 60 * 60),
+                reguler('updatebackground', 24 * 60 * 60),
                 reguler('updateresamount', 24 * 60 * 60),
                 reguler('updatekeywordamount', 24 * 60 * 60),
             ]
-            makelog('CACHE start sscuessed !')
+            makelog('CACHE start sscuessed !',2)
             while True:
                 for reguler in reguler_list:
                     reguler.act()
                     CACHE.getenginelist()
                 time.sleep(1)
         except Exception as e:
-            makelog('Error in main process! Reboot after 2s !\n{}'.format(traceback.format_exc()))
+            makelog('Error in main process! Reboot after 2s !\n{}'.format(traceback.format_exc()),1)
             time.sleep(2)
