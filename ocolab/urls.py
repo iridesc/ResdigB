@@ -18,11 +18,5 @@ from django.urls import path,include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('market/', include('market.urls')),
-    path('gcc/',include('gcc.urls')),
-    path('resdig/', include('resdig.urls')),
-    path('lab/', include('lab.urls')),
-    path('mtool/', include('mtool.urls')),
-    path('', include('resdig.urls')),
-    
+    path('', include('resdig.urls'))
 ]

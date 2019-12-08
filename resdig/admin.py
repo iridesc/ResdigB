@@ -1,45 +1,37 @@
 from django.contrib import admin
-from .models import Etable, Keywordtable, Feedbacktable, Messagetable, Appversiontable, Broadcasttable, Donatetable, Resourcetable
-
+from .models import Keyword, Res, Engine, Donate, Msg, Feedback, Cast
 # Register your models here.
-@admin.register(Etable)
+@admin.register(Engine)
 class EngineAdmin(admin.ModelAdmin):
-    list_display = ('name', 'Model', 'system', 'engineposition',
-                    'engineposition', 'provider')
+    list_display = ('name', 'model', 'system', 'position',
+                    'provider')
 
 
-@admin.register(Keywordtable)
+@admin.register(Keyword)
 class keywordAdmin(admin.ModelAdmin):
-    list_display = ('keyword', 'hot', 'cantfind', 'lastdigtime')
+    list_display = ('keyword', 'dbId', 'digTimes', 'lastDigTime')
 
 
-@admin.register(Resourcetable)
+@admin.register(Res)
 class ResAdmin(admin.ModelAdmin):
-    list_display = ('keyword', 'type', 'filename', 'filesize', 'link', 'web')
+    list_display = ('type', 'filename', 'filesize', 'link', 'web')
 
 
-@admin.register(Messagetable)
-class MessageAdmin(admin.ModelAdmin):
-    list_display = ('time', 'message', 'messagefrom')
+@admin.register(Msg)
+class MsgAdmin(admin.ModelAdmin):
+    list_display = ('time', 'info')
 
 
-@admin.register(Feedbacktable)
+@admin.register(Feedback)
 class FeedbackAdmin(admin.ModelAdmin):
-    list_display = ('time', 'message', 'messagefrom', 'mail', 'phone')
+    list_display = ('time', 'info')
 
 
-@admin.register(Appversiontable)
-class AppversionAdmin(admin.ModelAdmin):
-    list_display = ('updatetime', 'versioncode',
-                    'versionname', 'describe', 'downloadlink')
-
-
-@admin.register(Broadcasttable)
+@admin.register(Cast)
 class BroadcastAdmin(admin.ModelAdmin):
-    list_display = ('casttime', 'servicestatus', 'message')
+    list_display = ('online', 'info')
 
 
-@admin.register(Donatetable)
+@admin.register(Donate)
 class DonatetAdmin(admin.ModelAdmin):
-    list_display = ('donatetime', 'donator',
-                    'donatetype', 'describe', 'message')
+    list_display = ('time', 'donator','info','msg')

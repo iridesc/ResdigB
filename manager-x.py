@@ -13,16 +13,10 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ocolab.settings")
 django.setup()
 from multiprocessing import Queue
 from multiprocessing.managers import BaseManager
-from resdig.models import Donatetable
-from resdig.models import Broadcasttable
-from resdig.models import Appversiontable
-from resdig.models import Messagetable
-from resdig.models import Keywordtable
-from resdig.models import Etable
-from resdig.models import Resourcetable
+from resdig.models import Keyword, Res, Engine, Donate, Msg, Feedback, Cast
 from loger import makelog, setting
-setting(2)
 
+setting(2)
 host = '0.0.0.0'
 port = 23333
 password = b'iridescent256938004'
@@ -268,114 +262,101 @@ class SubTask:
             makelog('Error unknow task{}'.format(self.task_type),1)
 
 
-class Engine:
+class Enginer:
+    acttime = 0
     def __init__(self, enginetableobj):
         self.name = enginetableobj.name
         self.system = enginetableobj.system
-        self.Model = enginetableobj.Model
-        self.engineposition = enginetableobj.engineposition
+        self.model = enginetableobj.model
+        self.position = enginetableobj.position
         self.provider = enginetableobj.provider
-        self.acttime = 0
 
-    def is_active(self):
+    def isActive(self):
         return time.time()-self.acttime < ENGINETIMEGAP
 
     def act(self):
         self.acttime = time.time()
 
-    def getdict(self):
+    def getDict(self):
         return {
             'name': self.name,
             'system': self.system,
-            'Model': self.Model,
-            'engineposition': self.engineposition,
+            'model': self.model,
+            'position': self.position,
             'provider': self.provider,
-            'cpu': '',
-            'cpufrom': '',
-            'memory': '',
-            'memoryfrom': '',
-            'storage': '',
-            'storagefrom': '',
-            'power': '',
-            'powerfrom': '',
-            'motherboard': '',
-            'motherboardfrom':'',
-            'is_active': self.is_active()
+            'isActive': self.isActive()
         }
 
 
 class cache:
-    def __init__(self, deepth, Egap):
+    # 主任务
+    tasks = []
+    # 子任务队列
+    subtaskQueue = Queue()
+
+    engines = [Enginer(E) for E in Engine.objects.all()]
+    resAmount = 0
+    keyAmount = 0
+    msgs = []
+    hotkeys = []
+    casts = []
+    donors = []
+
+    def __init__(self, deepth):
         self.deepth = deepth
-        # 主任务
-        self.tasklist = []
-        # 子任务队列
-        self.subtaskqueue = Queue()
-
-        self.enginelist = [Engine(E) for E in Etable.objects.all()]
-        self.resamount = 0
-        self.keyamount = 0
-        self.commentlist = []
-        self.hotkeylist = []
-        self.appversion = []
-        self.broadcast = []
-        self.donorinfo = []
-
+       
     # 操作函数
     def puttask(self, keyword):
-        self.tasklist.append(Task(keyword, self.subtaskqueue))
+        self.tasks.append(Task(keyword, self.subtaskQueue))
+        return True
 
     def subtaskqueue_empty(self):
-        return self.subtaskqueue.empty()
+        return self.subtaskQueue.empty()
 
     def subtaskqueue_get(self):
-        return self.subtaskqueue.get()
+        return self.subtaskQueue.get()
 
     def subtaskqueue_puts(self, keyword, subtask_list):
-        for task in self.tasklist:
+        for task in self.tasks:
             if task.keyword == keyword:
                 task.subtask_total_counter += len(subtask_list)
                 task.statu = 'Waiting'
         for subtak in subtask_list:
-            self.subtaskqueue.put(subtak)
+            self.subtaskQueue.put(subtak)
 
     def getresamount(self):
-        return self.resamount
+        return self.resAmount
 
     def getkeyamount(self):
-        return self.keyamount
+        return self.keyAmount
 
     def getenginelist(self):
-        return [engine.getdict() for engine in self.enginelist]
+        return [engine.getDict() for engine in self.engines]
 
     def getcommentlist(self):
-        return self.commentlist
+        return self.msgs
 
     def gethotkeylist(self):
-        return self.hotkeylist
+        return self.hotkeys
 
-    def getappversion(self):
-        return self.appversion
 
     def getbroadcast(self):
-        return self.broadcast
+        return self.casts
 
     def getdonorinfo(self):
-        return self.donorinfo
+        return self.donors
 
-
-    
     def gettasklist(self):
-        return [task.getdict() for task in self.tasklist]
+        return [task.getdict() for task in self.tasks]
 
     def checktaskin(self, keyword):
         keywordlist = []
-        for task in self.tasklist:
+        for task in self.tasks:
             keywordlist.append(task.keyword)
         return keyword in keywordlist
     
     def rawres_upload(self,keyword,rawres_list):
-        for task in self.tasklist:
+        for task in self.tasks:
             if task.keyword == keyword:
                 task.putrawres(rawres_list)
                 break        
@@ -384,40 +365,35 @@ class cache:
 
     # engine
 
-    def activeengine(self, enginename):
-        for engine in self.enginelist:
-            if engine.name == enginename:
+    def activeengine(self, engineName):
+        for engine in self.engines:
+            if engine.name == engineName:
                 engine.act()
 
     #   regular函数
 
     def updateresamount(self):
-        self.resamount = Resourcetable.objects.all().count()
+        self.resamount = Res.objects.all().count()
 
     def updatekeywordamount(self):
-        self.keyamount = Keywordtable.objects.all().count()
+        self.keyamount = Keyword.objects.all().count()
 
     def updatecommentlist(self):
-        self.commentlist = list(
-            Messagetable.objects.order_by('-time')[0:200].values())
+        self.msgs = list(Msg.objects.order_by('-time')[0:200].values())
 
     def updatehotkeylist(self):
         try:
             self.hotkeylist = list(
-                Keywordtable.objects.all().order_by('-hot')[0:50].values())
+                Keyword.objects.all().order_by('-digTimes')[0:50].values()
+                )
         except Exception as e:
             makelog('Error in updatehotkeylist!\n'+str(e),1)
 
 
-    def updateappversion(self):
-        try:
-            self.appversion = Appversiontable.objects.order_by('-id').values()[0]
-        except Exception as e:
-            makelog('Error in updateappversion!\n'+str(e),1)
 
     def updatebroadcast(self):
         try:
-            self.broadcast = Broadcasttable.objects.order_by('-id').values()[0]
+            self.broadcast = Cast.objects.order_by('-id').values()[0]
         except Exception as e:
             makelog('Error in updatebroadcast!\n' + str(e),1)
         
@@ -425,54 +401,43 @@ class cache:
     def updatedonnateinfo(self):
         try:
             self.donorinfo = list(
-                Donatetable.objects.all().order_by('-donatetime').values())
+                Donate.objects.all().order_by('-time').values())
         except Exception as e:
             makelog('Error in updatedonnateinfo!\n' + str(e),1)
             
     def saveres(self):
-        for task in self.tasklist:
+        for task in self.tasks:
             if task.statu == 'Done' or (task.statu == 'Digging' and time.time() - task.last_active_time >20):
                 # 除重
                 savereslist = []
                 prelinklist = [
-                    res.link for res in Resourcetable.objects.filter(keyword=task.keyword)
+                    res.link for res in Res.objects.filter(keyword=task.keyword)
                     ]
                 for res in task.reslist:
                     if res.link not in prelinklist:
                         savereslist.append(res)
                 # 储存
-                Resourcetable.objects.bulk_create(savereslist)
+                Res.objects.bulk_create(savereslist)
                 # 删除任务
-                self.tasklist.remove(task)
+                self.tasks.remove(task)
 
-    def updatebackground(self):
-        imagepath = './static/resdig/background.jpg'
-        url = 'https://cn.bing.com/HPImageArchive.aspx'
-        data = {
-            'n': 1,
-            'format': 'js'
-        }
-        baselink = requests.get(url, data).json()['images'][0]['url']
-        link = 'https://cn.bing.com' + baselink
-        image = requests.get(link, )
-        with open(imagepath, 'wb') as fd:
-            fd.write(image.content)
+    # def updatebackground(self):
+    #     imagepath = './static/resdig/background.jpg'
+    #     url = 'https://cn.bing.com/HPImageArchive.aspx'
+    #     data = {
+    #         'n': 1,
+    #         'format': 'js'
+    #     }
+    #     baselink = requests.get(url, data).json()['images'][0]['url']
+    #     link = 'https://cn.bing.com' + baselink
+    #     image = requests.get(link, )
+    #     with open(imagepath, 'wb') as fd:
+    #         fd.write(image.content)
 
-    # 管理函数
-    def reloadenginestatu(self):
-        self.enginelist = [Engine(E) for E in Etable.objects.all()]
-
-    def operator(self):
-        print('-------------Operator--------------')
-        # operator here
-
-        # operator done
-        print('----------------OJBK---------------')
 
 
 class reguler():
     def __init__(self, Fname, gap):
-        global CACHE
         self.Fname = Fname
         self.gap = gap
         self.acttime = 0
@@ -481,6 +446,7 @@ class reguler():
         nowt = time.time()
         if nowt - self.acttime > self.gap:
             self.acttime = nowt
+            global CACHE
             F = getattr(CACHE, self.Fname)
             F()
 
@@ -502,7 +468,7 @@ if __name__ == '__main__':
     while True:
         makelog('Manager-x 2.0 start!',2)
         try:
-            cacheobj = cache(deepth=DEEPTH, Egap=ENGINETIMEGAP)
+            cacheobj = cache(deepth=DEEPTH)
             cachemanager.register('cacheobj', getcache)
             manager = cachemanager(address=(host, port), authkey=password)
             manager.start()
@@ -512,9 +478,8 @@ if __name__ == '__main__':
                 reguler('updatecommentlist', 2),
                 reguler('updatebroadcast', 10 * 60),
                 reguler('updatedonnateinfo', 10 * 60),
-                reguler('updateappversion', 60 * 60),
                 reguler('updatehotkeylist', 3 * 60 * 60),
-                reguler('updatebackground', 24 * 60 * 60),
+                # reguler('updatebackground', 24 * 60 * 60),
                 reguler('updateresamount', 24 * 60 * 60),
                 reguler('updatekeywordamount', 24 * 60 * 60),
             ]

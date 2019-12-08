@@ -3,9 +3,7 @@ from . import views
 
 
 urlpatterns = [
-
     #user
     path('', views.home),
     path('api/', views.api),
-    path('operator/',views.operator)
 ]

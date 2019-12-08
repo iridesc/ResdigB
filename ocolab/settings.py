@@ -30,7 +30,7 @@ ALLOWED_HOSTS = '*'
 
 
 # Application definition
-#加入你的应用
+# 加入你的应用
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -38,29 +38,25 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'lab',
     'resdig',
-    'market',
-    'gcc',
-    'mtool',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    #'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'ocolab.urls' #根域名配置urls文件
+ROOT_URLCONF = 'ocolab.urls'  # 根域名配置urls文件
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS':  [os.path.join(BASE_DIR,'resdig/templates'),os.path.join(BASE_DIR,'market/templates')],
+        'DIRS':  [os.path.join(BASE_DIR, 'resdig/templates'), os.path.join(BASE_DIR, 'market/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -94,7 +90,7 @@ DATABASES = {
     #     'OPTIONS': {
     #         'charset': 'utf8mb4'
     #     },
-    
+
     # }
 }
 
@@ -132,9 +128,8 @@ USE_L10N = True
 USE_TZ = True
 
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR,'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
