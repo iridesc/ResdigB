@@ -13,15 +13,16 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ocolab.settings")
 django.setup()
 from multiprocessing import Queue
 from multiprocessing.managers import BaseManager
-from resdig.models import Keyword, Res, Engine, Donate, Msg, Feedback, Cast
+from resdig.models import Keyword, Res, Engine, Donor, Msg, Feedback, Cast
 from loger import makelog, setting
 
-setting(2)
+setting(4)
 host = '0.0.0.0'
 port = 23333
 password = b'iridescent256938004'
 DEEPTH = 400
 ENGINETIMEGAP = 15
+
 
 
 class RawRes:
@@ -288,27 +289,76 @@ class Enginer:
         }
 
 
-class cache:
+class reguler():
+    acttime = 0
+    def __init__(self, Fname, gap,obj):
+        self.Fname = Fname
+        self.gap = gap
+        self.obj=obj
+
+    def act(self):
+        nowt = time.time()
+        if nowt - self.acttime > self.gap:
+            self.acttime = nowt
+            F = getattr(self.obj, self.Fname)
+            makelog(self.Fname+' starting...')
+            F()
+            makelog(self.Fname+' Done!',4)
+
+
+class Cache:
     # 主任务
     tasks = []
     # 子任务队列
     subtaskQueue = Queue()
+    # 深度
+    deepth=DEEPTH
 
     engines = [Enginer(E) for E in Engine.objects.all()]
     resAmount = 0
     keyAmount = 0
     msgs = []
-    hotkeys = []
+    hots = []
     casts = []
     donors = []
 
-    def __init__(self, deepth):
-        self.deepth = deepth
-       
-    # 操作函数
+    # api
     def puttask(self, keyword):
         self.tasks.append(Task(keyword, self.subtaskQueue))
         return True
+    
+    def getEngines(self):
+        return [engine.getDict() for engine in self.engines]
+    
+    def getTasks(self):
+        return [task.getdict() for task in self.tasks]
+        
+    def checkTaskIn(self,keyword):
+        keywordlist = []
+        for task in self.tasks:
+            keywordlist.append(task.keyword)
+        return keyword in keywordlist
+   
+    def getHots(self):
+       return self.hots
+    
+    def getAmount(self):
+        return {
+                'resAmount': self.resAmount,
+                'keyAmount': self.keyAmount,
+            }
+
+    def getMsgs(self):
+        return self.msgs
+    
+
+    def getCasts(self):
+        return self.casts
+    
+    def getDonors(self):
+        return self.donors
+   
+    # engine
 
     def subtaskqueue_empty(self):
         return self.subtaskQueue.empty()
@@ -324,46 +374,11 @@ class cache:
         for subtak in subtask_list:
             self.subtaskQueue.put(subtak)
 
-    def getresamount(self):
-        return self.resAmount
-
-    def getkeyamount(self):
-        return self.keyAmount
-
-    def getenginelist(self):
-        return [engine.getDict() for engine in self.engines]
-
-    def getcommentlist(self):
-        return self.msgs
-
-    def gethotkeylist(self):
-        return self.hotkeys
-
-
-    def getbroadcast(self):
-        return self.casts
-
-    def getdonorinfo(self):
-        return self.donors
-
-    def gettasklist(self):
-        return [task.getdict() for task in self.tasks]
-
-    def checktaskin(self, keyword):
-        keywordlist = []
-        for task in self.tasks:
-            keywordlist.append(task.keyword)
-        return keyword in keywordlist
-    
     def rawres_upload(self,keyword,rawres_list):
         for task in self.tasks:
             if task.keyword == keyword:
                 task.putrawres(rawres_list)
                 break        
-
-
-
-    # engine
 
     def activeengine(self, engineName):
         for engine in self.engines:
@@ -372,40 +387,37 @@ class cache:
 
     #   regular函数
 
-    def updateresamount(self):
-        self.resamount = Res.objects.all().count()
+    def udResAmount(self):
+        self.resAmount = Res.objects.all().count()
 
-    def updatekeywordamount(self):
-        self.keyamount = Keyword.objects.all().count()
+    def udKeywordAmount(self):
+        self.keyAmount = Keyword.objects.all().count()
 
-    def updatecommentlist(self):
+    def udMsgs(self):
         self.msgs = list(Msg.objects.order_by('-time')[0:200].values())
 
-    def updatehotkeylist(self):
+    def udHots(self):
         try:
-            self.hotkeylist = list(
-                Keyword.objects.all().order_by('-digTimes')[0:50].values()
+            self.hots = list(
+                Keyword.objects.all().order_by('-lastDigTime')[0:50].values()
                 )
         except Exception as e:
-            makelog('Error in updatehotkeylist!\n'+str(e),1)
+            makelog('Error in udhotkeylist!\n'+str(e),1)
 
-
-
-    def updatebroadcast(self):
+    def udCasts(self):
         try:
-            self.broadcast = Cast.objects.order_by('-id').values()[0]
+            self.casts = Cast.objects.order_by('-id').values()[0]
         except Exception as e:
-            makelog('Error in updatebroadcast!\n' + str(e),1)
+            makelog('Error in udCasts!\n' + str(e),1)
         
-
-    def updatedonnateinfo(self):
+    def udDonors(self):
         try:
-            self.donorinfo = list(
-                Donate.objects.all().order_by('-time').values())
+            self.donors = list(
+                Donor.objects.all().order_by('-time').values())
         except Exception as e:
-            makelog('Error in updatedonnateinfo!\n' + str(e),1)
+            makelog('Error in uddonnateinfo!\n' + str(e),1)
             
-    def saveres(self):
+    def saveRes(self):
         for task in self.tasks:
             if task.statu == 'Done' or (task.statu == 'Digging' and time.time() - task.last_active_time >20):
                 # 除重
@@ -421,7 +433,7 @@ class cache:
                 # 删除任务
                 self.tasks.remove(task)
 
-    # def updatebackground(self):
+    # def udbackground(self):
     #     imagepath = './static/resdig/background.jpg'
     #     url = 'https://cn.bing.com/HPImageArchive.aspx'
     #     data = {
@@ -436,30 +448,21 @@ class cache:
 
 
 
-class reguler():
-    def __init__(self, Fname, gap):
-        self.Fname = Fname
-        self.gap = gap
-        self.acttime = 0
-
-    def act(self):
-        nowt = time.time()
-        if nowt - self.acttime > self.gap:
-            self.acttime = nowt
-            global CACHE
-            F = getattr(CACHE, self.Fname)
-            F()
 
 
+def initManager():
 
+    def getCache():
+        return cache
+    class CacheManager(BaseManager):
+        pass
+    cache = Cache()
+    CacheManager.register('getCache', getCache)
+    cacheManager = CacheManager(address=(host, port), authkey=password)
+    cacheManager.start()
+    cache = cacheManager.getCache()
+    return cache
 
-
-def getcache():
-    return cacheobj
-
-
-class cachemanager(BaseManager):
-    pass
 
 
 
@@ -468,26 +471,23 @@ if __name__ == '__main__':
     while True:
         makelog('Manager-x 2.0 start!',2)
         try:
-            cacheobj = cache(deepth=DEEPTH)
-            cachemanager.register('cacheobj', getcache)
-            manager = cachemanager(address=(host, port), authkey=password)
-            manager.start()
-            CACHE = manager.cacheobj()
+            
+            cache=initManager()
+
             reguler_list = [
-                reguler('saveres', 2),
-                reguler('updatecommentlist', 2),
-                reguler('updatebroadcast', 10 * 60),
-                reguler('updatedonnateinfo', 10 * 60),
-                reguler('updatehotkeylist', 3 * 60 * 60),
-                # reguler('updatebackground', 24 * 60 * 60),
-                reguler('updateresamount', 24 * 60 * 60),
-                reguler('updatekeywordamount', 24 * 60 * 60),
+                reguler('saveRes', 2,cache),
+                reguler('udMsgs', 2,cache),
+                reguler('udCasts', 10 * 60,cache),
+                reguler('udDonors', 10 * 60,cache),
+                reguler('udHots', 3 * 60 * 60,cache),
+                # reguler('udbackground', 24 * 60 * 60,cache),
+                reguler('udResAmount', 24 * 60 * 60,cache),
+                reguler('udKeywordAmount', 24 * 60 * 60,cache),
             ]
-            makelog('CACHE start sscuessed !',2)
+            makelog('cache start sscuessed !',2)
             while True:
                 for reguler in reguler_list:
                     reguler.act()
-                    CACHE.getenginelist()
                 time.sleep(1)
         except Exception as e:
             makelog('Error in main process! Reboot after 2s !\n{}'.format(traceback.format_exc()),1)

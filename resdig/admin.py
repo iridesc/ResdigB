@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Keyword, Res, Engine, Donate, Msg, Feedback, Cast
+from .models import Keyword, Res, Engine, Donor, Msg, Feedback, Cast
 # Register your models here.
 @admin.register(Engine)
 class EngineAdmin(admin.ModelAdmin):
@@ -28,10 +28,10 @@ class FeedbackAdmin(admin.ModelAdmin):
 
 
 @admin.register(Cast)
-class BroadcastAdmin(admin.ModelAdmin):
+class castAdmin(admin.ModelAdmin):
     list_display = ('online', 'info')
 
 
-@admin.register(Donate)
-class DonatetAdmin(admin.ModelAdmin):
-    list_display = ('time', 'donator','info','msg')
+@admin.register(Donor)
+class donorAdmin(admin.ModelAdmin):
+    list_display = ('time', 'name','info','msg')
