@@ -1,16 +1,16 @@
-﻿from multiprocessing.managers import BaseManager
-from django.shortcuts import render
-from Crypto.Cipher import AES
-from Crypto.Util.Padding import pad, unpad
+﻿from django.shortcuts import render
+# from Crypto.Cipher import AES
+# from Crypto.Util.Padding import pad, unpad
 import base64
-
+from initManager import initManager
 from .models import Keyword, Res, Engine, Donor, Msg, Feedback, Cast
 from django.http import HttpResponse, JsonResponse, HttpResponseNotAllowed, HttpResponseBadRequest
+from django.views.decorators.csrf import ensure_csrf_cookie
 import json
 import time
 import re
 import sys
-import os
+import os,traceback
 import random
 from django.conf import settings
 from django.core.mail import send_mail
@@ -22,37 +22,37 @@ BLOCKSIZE = 16
 PADSTYLE = 'pkcs7'
 
 
-def GetMode():
-    KEY = b'q863cqfiwyug72jc'
-    VI = b'1234567812345678'
-    MODE = AES.MODE_CBC
-    return AES.new(KEY, MODE, VI)
+# def GetMode():
+#     KEY = b'q863cqfiwyug72jc'
+#     VI = b'1234567812345678'
+#     MODE = AES.MODE_CBC
+#     return AES.new(KEY, MODE, VI)
 
 
-def Encrypto(r_data_str):
-    obj = GetMode()
+# def Encrypto(r_data_str):
+#     obj = GetMode()
 
-    # print(data)
-    r_data_bytes = bytes(r_data_str, 'utf-8')
-    # 补齐字节
-    r_data_paded_bytes = pad(r_data_bytes, BLOCKSIZE, PADSTYLE)
-    # 加密
-    e_data_bytes = obj.encrypt(r_data_paded_bytes)  # .hex()
-    e_data_str = str(base64.b64encode(e_data_bytes),
-                     encoding='utf-8', errors="ignore")
-    # print(e_data_str)
-    return e_data_str
+#     # print(data)
+#     r_data_bytes = bytes(r_data_str, 'utf-8')
+#     # 补齐字节
+#     r_data_paded_bytes = pad(r_data_bytes, BLOCKSIZE, PADSTYLE)
+#     # 加密
+#     e_data_bytes = obj.encrypt(r_data_paded_bytes)  # .hex()
+#     e_data_str = str(base64.b64encode(e_data_bytes),
+#                      encoding='utf-8', errors="ignore")
+#     # print(e_data_str)
+#     return e_data_str
 
 
-def Decrypto(e_data_str):
-    obj = GetMode()
+# def Decrypto(e_data_str):
+#     obj = GetMode()
 
-    e_data_bytes = base64.b64decode(e_data_str)
-    r_data_paded_bytes = obj.decrypt(e_data_bytes)
-    r_data_bytes = unpad(r_data_paded_bytes, BLOCKSIZE, PADSTYLE)
-    r_data_str = str(r_data_bytes, encoding='utf-8', errors="ignore")
-    print(r_data_str)
-    return r_data_str
+#     e_data_bytes = base64.b64decode(e_data_str)
+#     r_data_paded_bytes = obj.decrypt(e_data_bytes)
+#     r_data_bytes = unpad(r_data_paded_bytes, BLOCKSIZE, PADSTYLE)
+#     r_data_str = str(r_data_bytes, encoding='utf-8', errors="ignore")
+#     print(r_data_str)
+#     return r_data_str
 
 
 def xssClear(s):
@@ -77,17 +77,10 @@ def modifyKeyword(keyword: str):
     return keyword
 
 
-def connectCache(host:str,port:int,password:bytes):
-    class CacheManager(BaseManager):
-        pass
-    CacheManager.register('getCache')
-    cacheManager = CacheManager(address=(host,port),authkey=password)
-    cacheManager.connect()
-    return cacheManager.getCache()
-    
-
+@ensure_csrf_cookie
 def home(request):
-    return HttpResponse(render(request, 'resdig_home.html'))
+    return HttpResponse(render(request, 'index.html'))
+
 
 
 def api(request):
@@ -101,22 +94,20 @@ def api(request):
             reason = postdata['reason']
 
             # 链接到缓存
-            cache = connectCache('127.0.0.1', 23333,b'iridescent256938004')
+           
+            cache=initManager(password='iridescent256938004')
+            # 动态数据请求
+            if reason == 'getDynamicData':
+                data=cache.getDynamicData()
 
-            # 获取引擎状态
-            if reason == 'getEngines':
-                data = {
+            # 静态数据请求
+            elif reason == 'getStaticData':
+                data=cache.getStaticData()
 
-                    'engines': cache.getEngines()
-                }
-            # 获取任务列表
-            elif reason == 'getTasks':
-                data = {
-                    'tasks': cache.getTasks()
-                }
-            # 检查关键字的状态（digging，recoded->getRess/dig，notRecode->dig）
+            # 检查关键字的状态（digging，recorded->getRess/dig，notRecord->dig）
             elif reason == 'checkKeyword':
                 keyword = postdata['keyword']
+                # makelog(keyword)
                 # 检查是否在任务列表
                 if cache.checkTaskIn(keyword):
                     data = {'status': 'digging'}
@@ -125,9 +116,8 @@ def api(request):
                     try:
                         KW = Keyword.objects.get(keyword=keyword)
                         data = {}
-                        data['status'] = 'recoded'
+                        data['status'] = 'recorded'
                         # 检查资源数量
-
                         data['resAmount'] = KW.res_set.all().count()
                         # 最后一次检查时间
                         data['lastDigTime'] = KW.lastDigTime
@@ -135,7 +125,8 @@ def api(request):
                         data['digTimes'] = KW.digTimes
                     except Exception as e:
                         makelog(str(e))
-                        data = {'status': 'notRecod'}
+                        data = {'status': 'notRecord'}
+            
             # 获取关键字资源
             elif reason == 'getRess':
                 keyword = postdata['keyword']
@@ -146,13 +137,16 @@ def api(request):
                     KW.hotPlus()
                     # 获取资源
                     data = {
+                        'suc':True,
                         'ress': list(KW.res_set.all().values())
                     }
                 except:
-                    data = {'ress': []}
+                    data = {
+                        'suc':False
+                    }
             # 挖掘
             elif reason == 'dig':
-                def checkRecodedAndTimelock(keyword):
+                def checkRecordedAndTimelock(keyword):
                     # 检查是否有记录
                     try:
                         KW = Keyword.objects.get(keyword=keyword)
@@ -163,22 +157,23 @@ def api(request):
                         print(type(e))
                         return False, False, None
 
-                keyword =  modifyKeyword(xssClear(postdata['keyword']))
+                keyword = modifyKeyword(xssClear(postdata['keyword']))
                 # 判断关键字是否合法
                 makelog('判断关键字是否合法')
                 if len(keyword) > 0 and len(keyword) <= 50:
                     # 检查是否在任务列表
                     makelog('检查是否在任务列表')
-                    recoded, timelock, KW = checkRecodedAndTimelock(keyword)
+                   
                     if cache.checkTaskIn(keyword):
                         data = {
                             'suc': False,
                             'reason': 'inTasks'
                         }
-                        makelog('Task in!')
+                        makelog('Task in!',4)
                     else:
+                        recorded, timelock, KW = checkRecordedAndTimelock(keyword)
                         makelog('检查是否有记录')
-                        if recoded:
+                        if recorded:
                             makelog('检查时间锁')
                             if timelock:
                                 data = {
@@ -192,42 +187,27 @@ def api(request):
                                 data = {
                                     'suc': True
                                 }
-                                makelog('Not lock')
+                                # 更新搜索时间
+                                KW.lastDigTime = time.time()
+                                KW.save()
+                                makelog('Not lock',4)
                         else:
                             cache.puttask(keyword)
+                            k = Keyword(keyword=keyword)
+                            k.save()
                             data = {
                                 'suc': True
                             }
-                            makelog('Not recode!')
+                            # 更新搜索时间
+                            KW.lastDigTime = time.time()
+                            KW.save()
+                            makelog('Not recorde!',4)
                 else:
                     data = {
                         'suc': False,
                         'reson': 'keywordInvalid'
                     }
-                    makelog('keywordInvalid')
-
-            elif reason == 'getHots':
-                data = {
-                    'hots': cache.getHots()
-                }
-
-            elif reason == 'getAmount':
-                data = cache.getAmount()
-
-            elif reason == 'getMsgs':
-                data = {
-                    'msgs': cache.getMsgs()
-                }
-
-            elif reason == 'getCasts':
-                data = {
-                    'casts': cache.getCasts()
-                }
-
-            elif reason == 'getDonors':
-                data = {
-                    'donors': cache.getDonors()
-                }
+                    makelog('keywordInvalid',4)
 
             elif reason == 'sendFeedback':
                 info = xssClear(postdata['info'])
@@ -270,18 +250,21 @@ def api(request):
 
             else:
                 data = {'suc': False}
+                makelog('unknow reason', 1)
 
             # data = Encrypto(json.dumps(data))
             # return HttpResponse(data)
             return JsonResponse(data)
-
         except Exception as E:
-            makelog('Main error in api\n'+str(E),1)
+            makelog('Main error in api\n'+str(E), 1)
+            makelog(traceback.format_exc())
             e_data_str = str(request.body, encoding='utf-8', errors="ignore")
-            makelog(e_data_str,1)
+            makelog(e_data_str)
+
+
             return HttpResponseBadRequest()
     else:
         makelog('wrong method!', 1)
         e_data_str = str(request.body, encoding='utf-8', errors="ignore")
-        makelog(e_data_str, 1)
+        makelog(e_data_str, )
         return HttpResponseBadRequest()

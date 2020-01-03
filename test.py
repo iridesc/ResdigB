@@ -2,10 +2,21 @@ import requests
 
 
 data = {
-    # 'reason': 'getEngines'
+    # 静态数据请求
+    'reason': 'getStaticData',
+    # 'reason': 'getCasts',
+    # 'reason': 'getHots',
+    # 'reason': 'getDonors',
+    # 'reason': 'getAmount',
 
+    # 动态数据请求
+    'reason': 'getDynamicData'
+    # 'reason': 'getEngines'
+    # 'reason': 'getMsgs',
     # 'reason': 'getTasks',
 
+
+    # 即时数据请求
     # 'reason': 'checkKeyword',
     # 'keyword': 'batman1',
 
@@ -15,24 +26,12 @@ data = {
     # 'reason': 'dig',
     # 'keyword': 'batman',
 
-    # 'reason': 'getHots',
-
-    # 'reason': 'getAmount',
-
-
-
-    'reason': 'getCasts',
-
-    # 'reason': 'getDonors',
-
-
     # 'reason': 'sendFeedback',
     # 'info':'hahahha'
 
     # 'reason': 'sendMsg',
     # 'info':'hahahhaisdg\>>'
 
-    # 'reason': 'getMsgs',
 
 
 }

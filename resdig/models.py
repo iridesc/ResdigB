@@ -11,7 +11,7 @@ class Keyword(models.Model):
     dbId = models.IntegerField(null=True, default=None)
     # 挖掘的次数
     digTimes = models.IntegerField(default=1)
-    lastDigTime = models.FloatField(default=0)
+    lastDigTime = models.FloatField(default=time.time())
 
     def hotPlus(self):
         self.digTimes = self.digTimes+1

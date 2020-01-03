@@ -6,4 +6,5 @@ urlpatterns = [
     #user
     path('', views.home),
     path('api/', views.api),
+ 
 ]

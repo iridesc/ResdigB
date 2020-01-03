@@ -1,28 +1,26 @@
-import requests
-import base64
-import json
-import traceback
-import time
-import sys
 import os
+import sys
+import json
+import time
+import base64
 import django
+import requests
+import traceback
+from multiprocessing import Queue
+from loger import makelog, setting
+from initManager import initManager
 pathname = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, pathname)
 sys.path.insert(0, os.path.abspath(os.path.join(pathname, '..')))
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ocolab.settings")
 django.setup()
-from multiprocessing import Queue
-from multiprocessing.managers import BaseManager
 from resdig.models import Keyword, Res, Engine, Donor, Msg, Feedback, Cast
-from loger import makelog, setting
 
-setting(4)
-host = '0.0.0.0'
+setting(3)
 port = 23333
-password = b'iridescent256938004'
+password = 'iridescent256938004'
 DEEPTH = 400
 ENGINETIMEGAP = 15
-
 
 
 class RawRes:
@@ -92,27 +90,26 @@ class Task:
         self.subtask_total_counter = 0
         self.reslist = []
         subtaskqueue.put(
-                SubTask(
-                    task_type='ParseTask',
-                    keyword=keyword,
-                    DEEPTH=DEEPTH,
-                )
+            SubTask(
+                task_type='ParseTask',
+                keyword=keyword,
+                DEEPTH=DEEPTH,
             )
+        )
         self.last_active_time = time.time()
         makelog('Task inited {}'.format(self.keyword))
 
     def getdict(self):
         return {
             'keyword': self.keyword,
-            'taskstatu': self.statu,
             'progress': self.progress,
-            'statu': self.statu
+            'status': self.statu
         }
 
     def putrawres(self, rawres_list):
-        def rawres_to_res(rawres):
-            return Resourcetable(
-                keyword=rawres.keyword,
+        def rawres_to_res(rawres,kw:Keyword):
+            return Res(
+                keyword=kw,
                 link=rawres.reslink,
                 web=rawres.weblink,
                 type=rawres.type,
@@ -121,33 +118,41 @@ class Task:
             )
 
         # 更新 task 最后一次活跃时间
+        makelog('更新 task 最后一次活跃时间')
         self.last_active_time = time.time()
         # 更新状态和进度
+        makelog('更新状态和进度')
         self.subtask_done_counter += 1
         self.progress = self.subtask_done_counter*100/self.subtask_total_counter
         if self.subtask_done_counter == self.subtask_total_counter:
             self.statu = 'Done'
         else:
             self.statu = 'Digging'
-        for rawres in rawres_list:
-            self.reslist.append(rawres_to_res(rawres))
-        makelog('SubTask done! {}'.format(self.keyword),4)
+        # 收集资源实例
+        if len(rawres_list)>0:
+            makelog('获取关键字')
+            kw = Keyword.objects.get(keyword=self.keyword)
+            makelog('收集资源实例')
+            for rawres in rawres_list:
+                makelog('*')
+                self.reslist.append(rawres_to_res(rawres,kw))
+        makelog('SubTask done! {}'.format(self.keyword), 4)
 
 
 class SubTask:
-    def __init__(self, task_type: str, keyword: str, weblink=None,DEEPTH=None):
+    def __init__(self, task_type: str, keyword: str, weblink=None, DEEPTH=None):
         self.task_type = task_type
         self.keyword = keyword
 
         if DEEPTH != None and task_type == 'ParseTask':
             self.DEEPTH = DEEPTH
-        
+
         elif task_type == 'MiniTask':
             self.link = weblink
         else:
-            makelog('Task type error!',1)
+            makelog('Task type error!', 1)
             raise
-        makelog('SubTask inited:{}'.format(self.task_type),4)
+        makelog('SubTask inited:{}'.format(self.task_type), 4)
 
     def do(self):
         @retry(tries=2)
@@ -225,21 +230,20 @@ class SubTask:
                                 raw_res
                             )
                 return rawres_list
-          
 
             # print('---------------------------')
             sourcecode = get_source_code()
             rawres_list = get_rawres(sourcecode)
             # 找到任务并放入rawres
             CACHE.rawres_upload(self.keyword, rawres_list)
-            makelog('MiniTask Done!',4)
+            makelog('MiniTask Done!', 4)
 
         def parsetask():
-           
+
             sengine = Bing(keyWord=self.keyword+' 下载', amount=self.DEEPTH)
-            makelog('search engine start',3)
+            makelog('search engine start', 3)
             results = sengine.Search()
-            self.weblinklist = [res['link'] for res in results] 
+            self.weblinklist = [res['link'] for res in results]
 
             # 上传SubTask
             CACHE.subtaskqueue_puts(
@@ -253,18 +257,19 @@ class SubTask:
                 ]
             )
 
-        makelog('{} Start!'.format(self.task_type),3)
+        makelog('{} Start!'.format(self.task_type), 3)
 
         if self.task_type == 'MiniTask':
             minitask()
         elif self.task_type == 'ParseTask':
             parsetask()
         else:
-            makelog('Error unknow task{}'.format(self.task_type),1)
+            makelog('Error unknow task{}'.format(self.task_type), 1)
 
 
 class Enginer:
     acttime = 0
+
     def __init__(self, enginetableobj):
         self.name = enginetableobj.name
         self.system = enginetableobj.system
@@ -291,19 +296,19 @@ class Enginer:
 
 class reguler():
     acttime = 0
-    def __init__(self, Fname, gap,obj):
+
+    def __init__(self, Fname, gap, obj):
         self.Fname = Fname
         self.gap = gap
-        self.obj=obj
+        self.obj = obj
 
     def act(self):
         nowt = time.time()
         if nowt - self.acttime > self.gap:
             self.acttime = nowt
             F = getattr(self.obj, self.Fname)
-            makelog(self.Fname+' starting...')
             F()
-            makelog(self.Fname+' Done!',4)
+            makelog(self.Fname+' Done!', 4)
 
 
 class Cache:
@@ -312,7 +317,7 @@ class Cache:
     # 子任务队列
     subtaskQueue = Queue()
     # 深度
-    deepth=DEEPTH
+    deepth = DEEPTH
 
     engines = [Enginer(E) for E in Engine.objects.all()]
     resAmount = 0
@@ -326,38 +331,29 @@ class Cache:
     def puttask(self, keyword):
         self.tasks.append(Task(keyword, self.subtaskQueue))
         return True
-    
-    def getEngines(self):
-        return [engine.getDict() for engine in self.engines]
-    
-    def getTasks(self):
-        return [task.getdict() for task in self.tasks]
-        
-    def checkTaskIn(self,keyword):
+
+    def checkTaskIn(self, keyword):
         keywordlist = []
         for task in self.tasks:
             keywordlist.append(task.keyword)
         return keyword in keywordlist
-   
-    def getHots(self):
-       return self.hots
-    
-    def getAmount(self):
+
+    def getDynamicData(self):
         return {
-                'resAmount': self.resAmount,
-                'keyAmount': self.keyAmount,
-            }
+            'engines': [engine.getDict() for engine in self.engines],
+            'msgs': self.msgs,
+            'tasks': [task.getdict() for task in self.tasks]
+        }
 
-    def getMsgs(self):
-        return self.msgs
-    
+    def getStaticData(self):
+        return {
+            'resAmount': self.resAmount,
+            'keywordAmount': self.keyAmount,
+            'casts': self.casts,
+            'donors': self.donors,
+            'hots': self.hots
+        }
 
-    def getCasts(self):
-        return self.casts
-    
-    def getDonors(self):
-        return self.donors
-   
     # engine
 
     def subtaskqueue_empty(self):
@@ -374,11 +370,11 @@ class Cache:
         for subtak in subtask_list:
             self.subtaskQueue.put(subtak)
 
-    def rawres_upload(self,keyword,rawres_list):
+    def rawres_upload(self, keyword, rawres_list):
         for task in self.tasks:
             if task.keyword == keyword:
                 task.putrawres(rawres_list)
-                break        
+                break
 
     def activeengine(self, engineName):
         for engine in self.engines:
@@ -400,34 +396,36 @@ class Cache:
         try:
             self.hots = list(
                 Keyword.objects.all().order_by('-lastDigTime')[0:50].values()
-                )
+            )
         except Exception as e:
-            makelog('Error in udhotkeylist!\n'+str(e),1)
+            makelog('Error in udhotkeylist!\n'+str(e), 1)
 
     def udCasts(self):
         try:
             self.casts = Cast.objects.order_by('-id').values()[0]
         except Exception as e:
-            makelog('Error in udCasts!\n' + str(e),1)
-        
+            makelog('Error in udCasts!\n' + str(e), 1)
+
     def udDonors(self):
         try:
             self.donors = list(
                 Donor.objects.all().order_by('-time').values())
         except Exception as e:
-            makelog('Error in uddonnateinfo!\n' + str(e),1)
-            
+            makelog('Error in uddonnateinfo!\n' + str(e), 1)
+
     def saveRes(self):
         for task in self.tasks:
-            if task.statu == 'Done' or (task.statu == 'Digging' and time.time() - task.last_active_time >20):
+            if task.statu == 'Done' or (task.statu == 'Digging' and time.time() - task.last_active_time > 20):
                 # 除重
                 savereslist = []
                 prelinklist = [
                     res.link for res in Res.objects.filter(keyword=task.keyword)
-                    ]
+                ]
                 for res in task.reslist:
                     if res.link not in prelinklist:
                         savereslist.append(res)
+                    else:
+                        prelinklist.append(res.link)
                 # 储存
                 Res.objects.bulk_create(savereslist)
                 # 删除任务
@@ -450,45 +448,30 @@ class Cache:
 
 
 
-def initManager():
-
-    def getCache():
-        return cache
-    class CacheManager(BaseManager):
-        pass
-    cache = Cache()
-    CacheManager.register('getCache', getCache)
-    cacheManager = CacheManager(address=(host, port), authkey=password)
-    cacheManager.start()
-    cache = cacheManager.getCache()
-    return cache
-
-
-
-
 
 if __name__ == '__main__':
     while True:
-        makelog('Manager-x 2.0 start!',2)
+        makelog('Manager-x 2.0 start!', 2)
         try:
-            
-            cache=initManager()
+            # 启动服务
+            cache = initManager(isManager=True,obj=Cache(),port=port,password=password)
 
             reguler_list = [
-                reguler('saveRes', 2,cache),
-                reguler('udMsgs', 2,cache),
-                reguler('udCasts', 10 * 60,cache),
-                reguler('udDonors', 10 * 60,cache),
-                reguler('udHots', 3 * 60 * 60,cache),
+                reguler('saveRes', 2, cache),
+                reguler('udMsgs', 2, cache),
+                reguler('udCasts', 10 * 60, cache),
+                reguler('udDonors', 10 * 60, cache),
+                reguler('udHots', 3 * 60 * 60, cache),
                 # reguler('udbackground', 24 * 60 * 60,cache),
-                reguler('udResAmount', 24 * 60 * 60,cache),
-                reguler('udKeywordAmount', 24 * 60 * 60,cache),
+                reguler('udResAmount', 24 * 60 * 60, cache),
+                reguler('udKeywordAmount', 24 * 60 * 60, cache),
             ]
-            makelog('cache start sscuessed !',2)
+            makelog('cache start sscuessed !', 2)
             while True:
                 for reguler in reguler_list:
                     reguler.act()
                 time.sleep(1)
         except Exception as e:
-            makelog('Error in main process! Reboot after 2s !\n{}'.format(traceback.format_exc()),1)
+            makelog('Error in main process! Reboot after 2s !\n{}'.format(
+                traceback.format_exc()), 1)
             time.sleep(2)
