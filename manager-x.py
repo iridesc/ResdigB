@@ -14,9 +14,10 @@ sys.path.insert(0, pathname)
 sys.path.insert(0, os.path.abspath(os.path.join(pathname, '..')))
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ocolab.settings")
 django.setup()
-from resdig.models import Keyword, Res, Engine, Donor, Msg, Feedback, Cast
+from resdig.models import Keyword, Res, Engine, Donor, Cast
 
-setting(3)
+
+setting(4)
 port = 23333
 password = 'iridescent256938004'
 DEEPTH = 400
@@ -308,7 +309,7 @@ class reguler():
             self.acttime = nowt
             F = getattr(self.obj, self.Fname)
             F()
-            makelog(self.Fname+' Done!', 4)
+            # makelog(self.Fname+' Done!', 4)
 
 
 class Cache:
@@ -316,16 +317,15 @@ class Cache:
     tasks = []
     # 子任务队列
     subtaskQueue = Queue()
-    # 深度
+    # 挖掘深度
     deepth = DEEPTH
 
     engines = [Enginer(E) for E in Engine.objects.all()]
     resAmount = 0
     keyAmount = 0
-    msgs = []
     hots = []
-    casts = []
     donors = []
+    casts=[]
 
     # api
     def puttask(self, keyword):
@@ -341,7 +341,6 @@ class Cache:
     def getDynamicData(self):
         return {
             'engines': [engine.getDict() for engine in self.engines],
-            'msgs': self.msgs,
             'tasks': [task.getdict() for task in self.tasks]
         }
 
@@ -389,20 +388,18 @@ class Cache:
     def udKeywordAmount(self):
         self.keyAmount = Keyword.objects.all().count()
 
-    def udMsgs(self):
-        self.msgs = list(Msg.objects.order_by('-time')[0:200].values())
 
     def udHots(self):
         try:
             self.hots = list(
-                Keyword.objects.all().order_by('-lastDigTime')[0:50].values()
+                Keyword.objects.filter(showInRec='True').order_by('-digTimes')[0:50].values()
             )
         except Exception as e:
             makelog('Error in udhotkeylist!\n'+str(e), 1)
 
     def udCasts(self):
         try:
-            self.casts = Cast.objects.order_by('-id').values()[0]
+            self.casts = list(Cast.objects.order_by('-id').values())
         except Exception as e:
             makelog('Error in udCasts!\n' + str(e), 1)
 
@@ -431,24 +428,6 @@ class Cache:
                 # 删除任务
                 self.tasks.remove(task)
 
-    # def udbackground(self):
-    #     imagepath = './static/resdig/background.jpg'
-    #     url = 'https://cn.bing.com/HPImageArchive.aspx'
-    #     data = {
-    #         'n': 1,
-    #         'format': 'js'
-    #     }
-    #     baselink = requests.get(url, data).json()['images'][0]['url']
-    #     link = 'https://cn.bing.com' + baselink
-    #     image = requests.get(link, )
-    #     with open(imagepath, 'wb') as fd:
-    #         fd.write(image.content)
-
-
-
-
-
-
 if __name__ == '__main__':
     while True:
         makelog('Manager-x 2.0 start!', 2)
@@ -458,11 +437,9 @@ if __name__ == '__main__':
 
             reguler_list = [
                 reguler('saveRes', 2, cache),
-                reguler('udMsgs', 2, cache),
                 reguler('udCasts', 10 * 60, cache),
                 reguler('udDonors', 10 * 60, cache),
                 reguler('udHots', 3 * 60 * 60, cache),
-                # reguler('udbackground', 24 * 60 * 60,cache),
                 reguler('udResAmount', 24 * 60 * 60, cache),
                 reguler('udKeywordAmount', 24 * 60 * 60, cache),
             ]

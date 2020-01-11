@@ -7,10 +7,9 @@ from django.db import models
 
 class Keyword(models.Model):
     keyword = models.CharField(max_length=90, primary_key=True, db_index=True)
-    # 豆瓣电影id
-    dbId = models.IntegerField(null=True, default=None)
     # 挖掘的次数
     digTimes = models.IntegerField(default=1)
+    showInRec = models.BooleanField(default=True)
     lastDigTime = models.FloatField(default=time.time())
 
     def hotPlus(self):
@@ -18,7 +17,7 @@ class Keyword(models.Model):
         self.save()
 
 class Res(models.Model):
-    keyword=models.ForeignKey(Keyword,on_delete=models.CASCADE)
+    keyword=models.ForeignKey(Keyword,on_delete=models.CASCADE,db_index=True)
     link = models.CharField(max_length=800)
     web = models.CharField(max_length=300)
     type = models.CharField(max_length=10)
@@ -33,15 +32,6 @@ class Engine(models.Model):
     position = models.CharField(max_length=50)
     provider = models.CharField(default='', max_length=20)
 
-
-class Feedback(models.Model):
-    time = models.FloatField(default=time.time())
-    info = models.CharField(max_length=500)
-
-
-class Msg(models.Model):
-    time = models.FloatField(default=time.time())
-    info = models.CharField(max_length=200)
 
 
 class Cast(models.Model):
