@@ -2,15 +2,15 @@
 echo '---------------------------------------'
 
 echo 'kill manager-x...'
-killall manager-x.py
+ps -ef | grep manager-x | grep -v grep | awk '{print $2}' | xargs kill -9
 echo 'done.'
 
 echo 'kill gunicorn...'
-killall gunicorn
+ps -ef | grep gunicorn | grep -v grep | awk '{print $2}' | xargs kill -9
 echo 'done.'
 
 echo 'kill caddy...'
-killall caddy
+ps -ef | grep caddy | grep -v grep | awk '{print $2}' | xargs kill -9
 echo 'done.'
 
 echo 'starting caddy...'
