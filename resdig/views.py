@@ -25,7 +25,7 @@ from loger import makelog, setting
 from AesEverywhere import aes256
 
 # Create your views here.
-setting(4)
+setting(2)
 PASSWORD="q863cqfiwyug72jc"
 
 def xssClear(s):

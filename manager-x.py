@@ -16,8 +16,8 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ocolab.settings")
 django.setup()
 from resdig.models import Keyword, Res, Engine, Donor, Cast
 
+setting(2)
 
-setting(4)
 port = 23333
 password = 'iridescent256938004'
 DEEPTH = 400
