@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'sb1scx*_#o4t7@hwwtk=nrrz#j^4rxbh!be#nj3%fycbhf)$sj'
 
 # SECURITY WARNING: don't run with debug turned on in production! 如果为ture 在出错时会暴露网站结构
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = '*'
 
