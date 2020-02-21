@@ -399,7 +399,7 @@ class Cache:
         try:
             hots = list(
                 Keyword.objects.filter(showInRec="True")
-                .order_by("-visitTimes")[0:10]
+                .order_by("-visitTimes")[0:50]
                 .values()
             )
             self.hots = hots
