@@ -5,4 +5,5 @@ static/*
 nohup.out
 manager-x.log
 resdig/__pycache__/*
+resdig/migrations/*
 *.pyc

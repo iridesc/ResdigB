@@ -340,6 +340,7 @@ class Cache:
         }
 
     def getStaticData(self):
+        time.sleep(5)
         return {
             "resAmount": self.resAmount,
             "keywordAmount": self.keyAmount,
