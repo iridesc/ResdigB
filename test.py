@@ -18,15 +18,14 @@ django.setup()
 from resdig.models import Keyword, Res, Engine, Donor, Cast
 
 setting(2)
-# from unlit.encrypto import encrypto,decrypto
 
-# from AesEverywhere import aes256
+from AesEverywhere import aes256
 
-# PASSWORD = "q863cqfiwyug72jc"
+PASSWORD = "q863cqfiwyug72jc"
 
 data = {
     # 静态数据请求
-    "reason": "getStaticData",
+    # "reason": "getStaticData",
     # 'reason': 'getCasts',
     # 'reason': 'getHots',
     # 'reason': 'getDonors',
@@ -39,10 +38,10 @@ data = {
     # 即时数据请求
     # 'reason': 'checkKeyword',
     # 'keyword': 'batman1',
-    # 'reason': 'getRess',
+    'reason': 'getRess',
     # 'keyword': 'batmanisdgf',
     # 'reason': 'dig',
-    # 'keyword': 'batman',
+    'keyword': '机械师',
     # 'reason': 'sendFeedback',
     # 'info':'hahahha'
     # 'reason': 'sendMsg',
@@ -57,8 +56,9 @@ data = {
 # print(aes256.decrypt(encrypted, "PASSWORD"))
 
 
-# r = requests.post('http://127.0.0.1:8000/api/', data=aes256.encrypt(json.dumps(data),PASSWORD))
-# print(aes256.decrypt(r.content,PASSWORD))
+r = requests.post('https://resdig.net/api/', data=aes256.encrypt(json.dumps(data),PASSWORD))
+print(r.status_code)
+print(aes256.decrypt(r.content,PASSWORD))
 # # 测试加密解密
 # a=json.dumps({})
 
@@ -74,12 +74,12 @@ data = {
 # print('************************')
 # d=decrypto(e)
 # print(d)
-amount=Keyword.objects.all().count()
-n=0
-for kw in Keyword.objects.all():
-    kw.visitTimes=kw.digTimes
-    kw.lastVisitTime=kw.lastDigTime
-    kw.save()
-    n+=1
-    if n%500==0:
-        print(round(n*100/amount),'%')
+# amount=Keyword.objects.all().count()
+# n=0
+# for kw in Keyword.objects.all():
+#     kw.visitTimes=kw.digTimes
+#     kw.lastVisitTime=kw.lastDigTime
+#     kw.save()
+#     n+=1
+#     if n%500==0:
+#         print(round(n*100/amount),'%')
