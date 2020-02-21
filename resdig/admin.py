@@ -17,8 +17,6 @@ class ResAdmin(admin.ModelAdmin):
     list_display = ('type', 'filename', 'filesize', 'link', 'web')
 
 
-
-
 @admin.register(Cast)
 class castAdmin(admin.ModelAdmin):
     list_display = ('online', 'info')

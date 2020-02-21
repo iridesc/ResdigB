@@ -1,11 +1,11 @@
 ﻿from django.shortcuts import render
 
-from Crypto.Cipher import AES
-from Crypto.Util.Padding import pad, unpad
+# from Crypto.Cipher import AES
+# from Crypto.Util.Padding import pad, unpad
 from AesEverywhere import aes256
 import base64
 from initManager import initManager
-from .models import Keyword, Res, Engine, Donor,  Cast
+from .models import Keyword, Res, Engine, Donor, Cast
 from django.http import (
     HttpResponse,
     JsonResponse,
@@ -22,11 +22,11 @@ import random
 from django.conf import settings
 from django.core.mail import send_mail
 from loger import makelog, setting
-from AesEverywhere import aes256
 
 # Create your views here.
 setting(2)
-PASSWORD="q863cqfiwyug72jc"
+PASSWORD = "q863cqfiwyug72jc"
+
 
 def xssClear(s):
     os = s
@@ -45,21 +45,22 @@ def modifyKeyword(keyword: str):
 
 @ensure_csrf_cookie
 def home(request, movieName=""):
-    # 链接到缓存
+    # server render
     cache = initManager(password="iridescent256938004")
-    recs=cache.getStaticData()['hots']
-    return HttpResponse(render(request, "index.html",{'keyword':movieName,'recs':recs}))
+    recs = cache.getStaticData()["hots"]
+    return HttpResponse(
+        render(request, "index.html", {"keyword": movieName, "recs": recs})
+    )
 
-# http://localhost:8000/movie/%E6%AD%BB%E4%BE%8D/#/
-# http://localhost:8000/movies/%E6%AD%BB%E4%BE%8D/
+
 def api(request):
     if request.method == "POST":
         try:
             # 请求的获取与解析
-            byte = aes256.decrypt(request.body,PASSWORD)
+            byte = aes256.decrypt(request.body, PASSWORD)
             postdata = json.loads(str(byte, encoding="utf-8", errors="ignore"))
             makelog(str(postdata))
-            
+
             # 获取reason
             reason = postdata["reason"]
             # 链接到缓存
@@ -103,11 +104,10 @@ def api(request):
                     # 获取到关键字
                     KW = Keyword.objects.get(keyword=keyword)
                     # 热度增加
-                    KW.hotPlus()
+                    KW.udVisitTimeAndTimes()
                     # 获取资源
                     data = {"suc": True, "ress": list(KW.res_set.all().values())}
                 except:
-                    
                     data = {"suc": False}
             # 挖掘
             elif reason == "dig":
@@ -147,61 +147,63 @@ def api(request):
                                 makelog("locked")
                             else:
                                 cache.puttask(keyword)
-                                data = {"suc": True}
                                 # 更新搜索时间
-                                KW.lastDigTime = time.time()
-                                KW.save()
+                                KW.udDigTimeAndTimes()
 
+                                data = {"suc": True}
                                 makelog("Not lock", 4)
+
                         else:
                             cache.puttask(keyword)
-                            k = Keyword(keyword=keyword)
-                            k.save()
+                            # 更新搜索时间
+                            KW = Keyword(keyword=keyword)
+                            KW.udDigTimeAndTimes()
+
                             data = {"suc": True}
                             makelog("Not recorde!", 4)
                 else:
                     data = {"suc": False, "reson": "keywordInvalid"}
                     makelog("keywordInvalid", 4)
 
-            elif reason == "sendFeedback":
-                info = xssClear(postdata["info"])
-                makelog("检查信息是否合法")
-                if 0 < len(info) and len(info) <= 500:
-                    try:
-                        Feedback(time=time.time(), info=info).save()
-                        data = {"suc": True}
-                        makelog("save suc!")
-                    except Exception as e:
-                        data = {
-                            "suc": False,
-                        }
-                        makelog("save faile!\n" + str(e), 1)
-                else:
-                    data = {"suc": False, "reason": "lenInvalid"}
-                    makelog("信息非法！")
+            # elif reason == "sendFeedback":
+            #     info = xssClear(postdata["info"])
+            #     makelog("检查信息是否合法")
+            #     if 0 < len(info) and len(info) <= 500:
+            #         try:
+            #             Feedback(time=time.time(), info=info).save()
+            #             data = {"suc": True}
+            #             makelog("save suc!")
+            #         except Exception as e:
+            #             data = {
+            #                 "suc": False,
+            #             }
+            #             makelog("save faile!\n" + str(e), 1)
+            #     else:
+            #         data = {"suc": False, "reason": "lenInvalid"}
+            #         makelog("信息非法！")
 
-            elif reason == "sendMsg":
-                info = xssClear(postdata["info"])
-                makelog("检查信息是否合法")
-                if 0 < len(info) and len(info) <= 200:
-                    try:
-                        Msg(time=time.time(), info=info).save()
-                        data = {"suc": True}
-                        makelog("save suc!")
-                    except Exception as e:
-                        data = {
-                            "suc": False,
-                        }
-                        makelog("save faile!\n" + str(e), 1)
-                else:
-                    data = {"suc": False, "reason": "lenInvalid"}
-                    makelog("信息非法！")
+            # elif reason == "sendMsg":
+            #     info = xssClear(postdata["info"])
+            #     makelog("检查信息是否合法")
+            #     if 0 < len(info) and len(info) <= 200:
+            #         try:
+            #             Msg(time=time.time(), info=info).save()
+            #             data = {"suc": True}
+            #             makelog("save suc!")
+            #         except Exception as e:
+            #             data = {
+            #                 "suc": False,
+            #             }
+            #             makelog("save faile!\n" + str(e), 1)
+            #     else:
+            #         data = {"suc": False, "reason": "lenInvalid"}
+            #         makelog("信息非法！")
 
             else:
                 data = {"suc": False}
                 makelog("unknow reason", 1)
-            
-            data = aes256.encrypt(json.dumps(data),PASSWORD)
+
+            data = aes256.encrypt(json.dumps(data), PASSWORD)
             return HttpResponse(data)
         except Exception as E:
             makelog("Main error in api\n" + str(E), 1)

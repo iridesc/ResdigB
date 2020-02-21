@@ -21,10 +21,10 @@ def Encrypto(r_data_str):
     r_data_paded_bytes= pad(r_data_bytes,BLOCKSIZE,PADSTYLE)
     #加密
     e_data_bytes = obj.encrypt(r_data_paded_bytes)#.hex()
-    e_data_str=str(base64.b64encode(e_data_bytes),encoding='utf-8',errors="ignore")
+    e_data_str=str(e_data_bytes,encoding='utf-8',errors="ignore")
     print(e_data_str)
     return e_data_str
-
+    
 
 def Decrypto(e_data_str):
     obj=GetMode()

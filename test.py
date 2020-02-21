@@ -1,9 +1,28 @@
+import os
+import sys
+import json
+import time
+import base64
+import django
 import requests
-import re,json
-from unlit.encrypto import encrypto,decrypto
+import traceback
+from multiprocessing import Queue
+from loger import makelog, setting
+from initManager import initManager
 
-from AesEverywhere import aes256
-PASSWORD="q863cqfiwyug72jc"
+pathname = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, pathname)
+sys.path.insert(0, os.path.abspath(os.path.join(pathname, "..")))
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ocolab.settings")
+django.setup()
+from resdig.models import Keyword, Res, Engine, Donor, Cast
+
+setting(2)
+# from unlit.encrypto import encrypto,decrypto
+
+# from AesEverywhere import aes256
+
+# PASSWORD = "q863cqfiwyug72jc"
 
 data = {
     # 静态数据请求
@@ -30,8 +49,16 @@ data = {
     # 'info':'hahahhaisdg\>>'
 }
 
-r = requests.post('http://127.0.0.1:8000/api/', data=aes256.encrypt(json.dumps(data),PASSWORD))
-print(aes256.decrypt(r.content,PASSWORD))
+# encryption
+# encrypted = aes256.encrypt("TEXT", "PASSWORD")
+# print(encrypted)
+
+# # decryption
+# print(aes256.decrypt(encrypted, "PASSWORD"))
+
+
+# r = requests.post('http://127.0.0.1:8000/api/', data=aes256.encrypt(json.dumps(data),PASSWORD))
+# print(aes256.decrypt(r.content,PASSWORD))
 # # 测试加密解密
 # a=json.dumps({})
 
@@ -47,3 +74,12 @@ print(aes256.decrypt(r.content,PASSWORD))
 # print('************************')
 # d=decrypto(e)
 # print(d)
+amount=Keyword.objects.all().count()
+n=0
+for kw in Keyword.objects.all():
+    kw.visitTimes=kw.digTimes
+    kw.lastVisitTime=kw.lastDigTime
+    kw.save()
+    n+=1
+    if n%500==0:
+        print(round(n*100/amount),'%')
