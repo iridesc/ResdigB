@@ -9,9 +9,3 @@ www.resdig.net/static, resdig.net/static {
         gzip
         root /root/ocolab/static/
 }
-
-www.resdig.cn, resdig.cn {
-        gzip
-        root ./tmp/
-}
-
