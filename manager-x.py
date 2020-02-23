@@ -390,7 +390,7 @@ class Cache:
                 kw.keyword
                 for kw in Keyword.objects.filter(showInRec="True")
                 .filter()
-                .order_by("-visitTimes")[0:50000]
+                .order_by("-visitTimes")[0:20000]
             ]
         except Exception as e:
             makelog("Error in udSugs!\n" + str(e), 1)
