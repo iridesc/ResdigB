@@ -314,7 +314,7 @@ class Cache:
     # 挖掘深度
     deepth = DEEPTH
     #
-    sugs = []
+    sugs = ''
     engines = [Enginer(E) for E in Engine.objects.all()]
     resAmount = 0
     keyAmount = 0
@@ -385,13 +385,28 @@ class Cache:
         self.keyAmount = Keyword.objects.all().count()
 
     def udSugs(self):
+        def check(Keyword):
+            for i in [
+                '电影','高清','无码','免费','下载','迅雷',
+                '百度云','ed2k','magnet','种子','磁力链',
+                '合集','百度网盘','国语','原画','粤语',
+                '枪版','性交','色情','情色','性交','兽交','做爱'
+                ]:
+                if i in Keyword:
+                    print(i,end=' ')
+                    return False
+            return True
+
         try:
-            self.sugs = [
-                kw.keyword
-                for kw in Keyword.objects.filter(showInRec="True")
-                .filter()
-                .order_by("-visitTimes")[0:20000]
-            ]
+            n=0
+            for kw in Keyword.objects.filter(showInRec="True").order_by("-visitTimes")[0:20000]:
+                if n>10000 or kw.visitTimes<2:
+                    break
+                elif check(kw.keyword):
+                    self.sugs += kw.keyword+'*'
+                    n+=1
+            makelog(str(n)+' : '+str(len(self.sugs)),1)
+
         except Exception as e:
             makelog("Error in udSugs!\n" + str(e), 1)
 
