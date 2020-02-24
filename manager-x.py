@@ -393,7 +393,7 @@ class Cache:
                 '枪版','性交','色情','情色','性交','兽交','做爱'
                 ]:
                 if i in Keyword:
-                    print(i,end=' ')
+                    # print(i,end=' ')
                     return False
             return True
 
