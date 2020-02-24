@@ -405,7 +405,7 @@ class Cache:
                 elif check(kw.keyword):
                     self.sugs += kw.keyword+'*'
                     n+=1
-            makelog(str(n)+' : '+str(len(self.sugs)),1)
+            makelog(str(n)+' : '+str(len(self.sugs)))
 
         except Exception as e:
             makelog("Error in udSugs!\n" + str(e), 1)
