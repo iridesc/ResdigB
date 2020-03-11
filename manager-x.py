@@ -306,6 +306,55 @@ class reguler:
             # makelog(self.Fname+' Done!', 4)
 
 
+def checkKeyword(Keyword):
+    for i in [
+        "电影",
+        "高清",
+        "无码",
+        "免费",
+        "下载",
+        "迅雷",
+        "百度云",
+        "ed2k",
+        "magnet",
+        "种子",
+        "磁力链",
+        "合集",
+        "百度网盘",
+        "国语",
+        "原画",
+        "粤语",
+        "枪版",
+        "性交",
+        "色情",
+        "情色",
+        "性交",
+        "兽交",
+        "做爱",
+        "多P",
+        "高潮",
+        "肏屄",
+        "吞精",
+        "陈冠希",
+        "足交",
+        "口交",
+        "isis",
+        '毛片',
+        '强奸',
+        '自慰',
+        '淫荡',
+        '滛乱',
+        '性瘾',
+        '裸体',
+        '女奴',
+        '艳照',
+    ]:
+        if i in Keyword:
+            # print(i,end=' ')
+            return False
+    return True
+
+
 class Cache:
     # 主任务
     tasks = []
@@ -314,7 +363,7 @@ class Cache:
     # 挖掘深度
     deepth = DEEPTH
     #
-    sugs = ''
+    sugs = ""
     engines = [Enginer(E) for E in Engine.objects.all()]
     resAmount = 0
     keyAmount = 0
@@ -385,29 +434,20 @@ class Cache:
         self.keyAmount = Keyword.objects.all().count()
 
     def udSugs(self):
-        def check(Keyword):
-            for i in [
-                '电影','高清','无码','免费','下载','迅雷',
-                '百度云','ed2k','magnet','种子','磁力链',
-                '合集','百度网盘','国语','原画','粤语',
-                '枪版','性交','色情','情色','性交','兽交','做爱'
-                ]:
-                if i in Keyword:
-                    # print(i,end=' ')
-                    return False
-            return True
 
         try:
-            n=0
-            newSugs=''
-            for kw in Keyword.objects.filter(showInRec="True").order_by("-visitTimes")[0:20000]:
-                if n>10000 or kw.visitTimes<2:
+            n = 0
+            newSugs = ""
+            for kw in Keyword.objects.filter(showInRec="True").order_by("-visitTimes")[
+                0:20000
+            ]:
+                if n > 10000 or kw.visitTimes < 2:
                     break
-                elif check(kw.keyword):
-                    newSugs += kw.keyword+'*'
-                    n+=1
-            self.sugs=newSugs
-            makelog(str(n)+' : '+str(len(self.sugs)))
+                elif checkKeyword(kw.keyword):
+                    newSugs += kw.keyword + "*"
+                    n += 1
+            self.sugs = newSugs
+            makelog(str(n) + " : " + str(len(self.sugs)))
 
         except Exception as e:
             makelog("Error in udSugs!\n" + str(e), 1)
@@ -425,7 +465,9 @@ class Cache:
 
     def udCasts(self):
         try:
-            self.casts = list(Cast.objects.filter(online="True").order_by("-id").values())
+            self.casts = list(
+                Cast.objects.filter(online="True").values()
+            )
         except Exception as e:
             makelog("Error in udCasts!\n" + str(e), 1)
 
@@ -454,7 +496,6 @@ class Cache:
                 Res.objects.bulk_create(savereslist)
                 # 删除任务
                 self.tasks.remove(task)
-
 
 
 if __name__ == "__main__":

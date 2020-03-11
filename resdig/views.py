@@ -1,4 +1,5 @@
 ﻿from django.shortcuts import render
+from .models import Keyword
 
 # from Crypto.Cipher import AES
 # from Crypto.Util.Padding import pad, unpad
@@ -43,11 +44,15 @@ def modifyKeyword(keyword: str):
     return re.sub(r"(^\s)|(\s$)", "", re.sub(r"\s+", " ", keyword))
 
 
-@ensure_csrf_cookie
-def home(request, movieName=""):
+def home(request, movieName="Resdig"):
     # server render
-    cache = initManager(password="iridescent256938004")
-    recs = cache.getStaticData()["hots"]
+    recs = list(
+        Keyword.objects.filter(showInRec="True")
+        .filter(visitTimes__gt=1)
+        .order_by("?")[0:500]
+        .values()
+    )
+
     return HttpResponse(
         render(request, "index.html", {"keyword": movieName, "recs": recs})
     )
