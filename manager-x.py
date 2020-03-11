@@ -399,12 +399,14 @@ class Cache:
 
         try:
             n=0
+            newSugs=''
             for kw in Keyword.objects.filter(showInRec="True").order_by("-visitTimes")[0:20000]:
                 if n>10000 or kw.visitTimes<2:
                     break
                 elif check(kw.keyword):
-                    self.sugs += kw.keyword+'*'
+                    newSugs += kw.keyword+'*'
                     n+=1
+            self.sugs=newSugs
             makelog(str(n)+' : '+str(len(self.sugs)))
 
         except Exception as e:
